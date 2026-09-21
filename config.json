@@ -1,0 +1,170 @@
+{
+  "rate": 90,
+  "tiers": [
+    {
+      "min": 60,
+      "pct": 15
+    },
+    {
+      "min": 40,
+      "pct": 10
+    },
+    {
+      "min": 20,
+      "pct": 5
+    }
+  ],
+  "categories": [
+    {
+      "id": "redes",
+      "icon": "📱",
+      "name": "Redes y contenido",
+      "sub": "Publicaciones, videos, planeación y textos para tus redes",
+      "monthly": true,
+      "items": [
+        {
+          "id": "post",
+          "name": "Publicación (foto o imagen)",
+          "pts": 1
+        },
+        {
+          "id": "historia",
+          "name": "Historia",
+          "pts": 1
+        },
+        {
+          "id": "carrusel",
+          "name": "Carrusel (varias imágenes)",
+          "pts": 2
+        },
+        {
+          "id": "video",
+          "name": "Video o reel",
+          "pts": 2
+        },
+        {
+          "id": "copy",
+          "name": "Redacción de textos — todo el mes",
+          "pts": 4
+        },
+        {
+          "id": "plan",
+          "name": "Plan de contenido del mes",
+          "pts": 3
+        }
+      ]
+    },
+    {
+      "id": "produccion",
+      "icon": "🎥",
+      "name": "¿Necesitas que yo tome las fotos o grabe?",
+      "sub": "Solo si el cliente no manda material propio — se agrega una vez y ya cubre el contenido del mes",
+      "monthly": true,
+      "items": [
+        {
+          "id": "sesion-media",
+          "name": "Sesión de producción — medio día",
+          "pts": 5
+        },
+        {
+          "id": "sesion-completa",
+          "name": "Sesión de producción — día completo",
+          "pts": 9
+        }
+      ]
+    },
+    {
+      "id": "web",
+      "icon": "💻",
+      "name": "Páginas web y apps",
+      "sub": "Diseño de pantallas, landing pages y sitios completos",
+      "monthly": true,
+      "items": [
+        {
+          "id": "pantalla",
+          "name": "Pantalla de app o web",
+          "pts": 2
+        },
+        {
+          "id": "landing",
+          "name": "Página web sencilla (una sección)",
+          "pts": 6
+        },
+        {
+          "id": "web-completa",
+          "name": "Página web completa (varias secciones)",
+          "pts": 10
+        },
+        {
+          "id": "ajustes",
+          "name": "Ajustes a algo que ya existe",
+          "pts": 4
+        }
+      ]
+    },
+    {
+      "id": "marca",
+      "icon": "🎨",
+      "name": "Marca e identidad",
+      "sub": "Logo, identidad visual y estrategia de marca",
+      "monthly": true,
+      "items": [
+        {
+          "id": "logo",
+          "name": "Logo",
+          "pts": 5
+        },
+        {
+          "id": "paquete",
+          "name": "Paquete básico (logo + colores + tipografía)",
+          "pts": 8
+        },
+        {
+          "id": "manual",
+          "name": "Manual de marca completo",
+          "pts": 12
+        },
+        {
+          "id": "concepto",
+          "name": "Concepto de marca (nombre, personalidad, público)",
+          "pts": 6
+        }
+      ]
+    },
+    {
+      "id": "rapidos",
+      "icon": "⚡",
+      "name": "Diseños rápidos",
+      "sub": "Encargos sueltos, sin plan mensual — se paga directo en pesos",
+      "monthly": false,
+      "currency": true,
+      "items": [
+        {
+          "id": "flyer",
+          "name": "Flyer",
+          "price": 150
+        },
+        {
+          "id": "banner",
+          "name": "Banner",
+          "price": 150
+        },
+        {
+          "id": "tarjeta",
+          "name": "Tarjeta de presentación",
+          "price": 150
+        },
+        {
+          "id": "portada",
+          "name": "Portada para redes",
+          "price": 150
+        },
+        {
+          "id": "lona",
+          "name": "Lona",
+          "price": 250
+        }
+      ]
+    }
+  ]
+}
