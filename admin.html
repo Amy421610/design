@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin — Cotizador Angie Guridi</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+  :root{
+    --bg:#FAF6F1; --surface:#FFFFFF; --surface-2:#F3ECE4;
+    --ink:#2B2230; --ink-soft:#6B6070;
+    --accent:#C4436B; --accent-ink:#FFFFFF;
+    --amber-soft:#FBEBD2; --line:#E9DFD6; --good:#4C8B6B; --good-soft:#DDEEE4;
+    --shadow: 0 12px 30px -14px rgba(43,34,48,0.25);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{background:var(--bg);color:var(--ink);font-family:'Manrope',system-ui,sans-serif;padding:28px 16px 100px;font-size:15px;}
+  .wrap{max-width:720px;margin:0 auto;}
+  h1,h2{font-family:'Fraunces',Georgia,serif;font-weight:700;margin:0;}
+  .eyebrow{display:inline-flex;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+
+  /* lock screen */
+  #lock{max-width:360px;margin:14vh auto 0;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;box-shadow:var(--shadow);text-align:center;}
+  #lock h1{font-size:22px;margin-bottom:6px;}
+  #lock p{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px;}
+  #lock input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);font-family:'Manrope';font-size:15px;margin-bottom:10px;}
+  #lock button{width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:14.5px;cursor:pointer;}
+  #lockError{color:var(--accent);font-size:12.5px;min-height:16px;margin-top:6px;}
+
+  #panel{display:none;}
+  .top p{color:var(--ink-soft);margin-top:6px;}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:var(--shadow);}
+  .card h2{font-size:17px;margin-bottom:4px;}
+  .card .sub{color:var(--ink-soft);font-size:12.5px;margin-bottom:14px;}
+  .field-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);}
+  .field-row:first-of-type{border-top:none;}
+  .field-name{font-weight:600;font-size:14px;}
+  .field-input{display:flex;align-items:center;gap:6px;background:var(--surface-2);border-radius:10px;padding:6px 10px;}
+  .field-input span{color:var(--ink-soft);font-size:13px;}
+  .field-input input{width:70px;border:none;background:transparent;font-family:'Manrope';font-weight:700;font-size:14.5px;text-align:right;}
+  .field-input input:focus{outline:none;}
+  .rate-highlight{background:var(--amber-soft);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .rate-highlight .field-name{font-size:15px;}
+  .tier-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px;}
+  .tier-row:first-of-type{border-top:none;}
+  .tier-row input{width:50px;padding:5px 7px;border-radius:8px;border:1px solid var(--line);font-family:'Manrope';font-weight:700;text-align:center;}
+  .actions{position:sticky;bottom:0;background:linear-gradient(to top, var(--bg) 60%, transparent);padding:16px 0 6px;display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{border:none;border-radius:12px;padding:13px 18px;font-family:'Manrope';font-weight:800;font-size:14.5px;cursor:pointer;}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);flex:1;}
+  .btn-primary.saved{background:var(--good);}
+  .note{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:14px 16px;font-size:12.5px;color:var(--ink-soft);line-height:1.7;margin-bottom:18px;}
+  .note b{color:var(--ink);}
+  .status{font-size:12.5px;color:var(--ink-soft);margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="lock">
+    <h1>🔒 Panel de precios</h1>
+    <p>Escribe la contraseña para editar los precios del cotizador.</p>
+    <input type="password" id="pw" placeholder="Contraseña" autocomplete="off">
+    <button id="unlockBtn" type="button">Entrar</button>
+    <div id="lockError"></div>
+  </div>
+
+  <div id="panel">
+    <div class="eyebrow">✦ Panel de precios</div>
+    <h1>Ajusta tus precios</h1>
+    <p style="color:var(--ink-soft);margin:6px 0 18px;">Cambia lo que necesites y descarga el archivo actualizado.</p>
+
+    <div class="note">
+      <b>Cómo se actualiza tu página:</b> aquí solo editas y descargas un archivo llamado <code>config.json</code>.
+      Para que tus clientes vean los precios nuevos, sube ese archivo a tu repositorio de GitHub reemplazando el <code>config.json</code> que ya está ahí. En cuanto lo reemplaces, la página pública se actualiza sola.
+    </div>
+
+    <div class="card">
+      <div class="rate-highlight">
+        <div class="field-name">💰 Precio por punto</div>
+        <div class="field-input"><span>$</span><input type="number" id="rateInput" min="1" step="1"><span>MXN</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Descuentos por volumen</h2>
+      <div class="sub">A partir de cuántos puntos se activa cada descuento</div>
+      <div id="tiersBox"></div>
+    </div>
+
+    <div id="categoriesBox"></div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="downloadCfgBtn" type="button">⬇️ Descargar config.json actualizado</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // 🔑 Cambia esta contraseña por la que tú quieras antes de subir el sitio:
+  var PASSWORD = "kokopop24";
+
+  var FALLBACK_CONFIG = {
+    rate: 50,
+    tiers: [{min:60,pct:15},{min:40,pct:10},{min:20,pct:5}],
+    categories: [
+      {id:"redes",icon:"📱",name:"Redes y contenido",sub:"Publicaciones, videos, planeación y textos para tus redes",monthly:true,items:[
+        {id:"post",name:"Publicación (foto o imagen)",pts:1},
+        {id:"historia",name:"Historia",pts:1},
+        {id:"carrusel",name:"Carrusel (varias imágenes)",pts:2},
+        {id:"video",name:"Video o reel",pts:2},
+        {id:"copy",name:"Redacción de textos — todo el mes",pts:4},
+        {id:"plan",name:"Plan de contenido del mes",pts:3}
+      ]},
+      {id:"produccion",icon:"🎥",name:"¿Necesitas que yo tome las fotos o grabe?",sub:"Solo si el cliente no manda material propio — se agrega una vez y ya cubre el contenido del mes",monthly:true,items:[
+        {id:"sesion-media",name:"Sesión de producción — medio día",pts:5},
+        {id:"sesion-completa",name:"Sesión de producción — día completo",pts:9}
+      ]},
+      {id:"web",icon:"💻",name:"Páginas web y apps",sub:"Diseño de pantallas, landing pages y sitios completos",monthly:true,items:[
+        {id:"pantalla",name:"Pantalla de app o web",pts:2},
+        {id:"landing",name:"Página web sencilla (una sección)",pts:6},
+        {id:"web-completa",name:"Página web completa (varias secciones)",pts:10},
+        {id:"ajustes",name:"Ajustes a algo que ya existe",pts:4}
+      ]},
+      {id:"marca",icon:"🎨",name:"Marca e identidad",sub:"Logo, identidad visual y estrategia de marca",monthly:true,items:[
+        {id:"logo",name:"Logo",pts:5},
+        {id:"paquete",name:"Paquete básico (logo + colores + tipografía)",pts:8},
+        {id:"manual",name:"Manual de marca completo",pts:12},
+        {id:"concepto",name:"Concepto de marca (nombre, personalidad, público)",pts:6}
+      ]},
+      {id:"rapidos",icon:"⚡",name:"Diseños rápidos",sub:"Encargos sueltos, sin plan mensual — se paga directo en pesos",monthly:false,currency:true,items:[
+        {id:"flyer",name:"Flyer",price:150},
+        {id:"banner",name:"Banner",price:150},
+        {id:"tarjeta",name:"Tarjeta de presentación",price:150},
+        {id:"portada",name:"Portada para redes",price:150},
+        {id:"lona",name:"Lona",price:250}
+      ]}
+    ]
+  };
+
+  var config = null;
+
+  var lockEl = document.getElementById("lock");
+  var panelEl = document.getElementById("panel");
+  var pwInput = document.getElementById("pw");
+  var unlockBtn = document.getElementById("unlockBtn");
+  var lockError = document.getElementById("lockError");
+  var rateInput = document.getElementById("rateInput");
+  var tiersBox = document.getElementById("tiersBox");
+  var categoriesBox = document.getElementById("categoriesBox");
+  var downloadCfgBtn = document.getElementById("downloadCfgBtn");
+  var statusEl = document.getElementById("status");
+
+  function unlock(){
+    if(pwInput.value === PASSWORD){
+      lockEl.style.display = "none";
+      panelEl.style.display = "block";
+      loadConfig();
+    } else {
+      lockError.textContent = "Contraseña incorrecta, intenta de nuevo.";
+    }
+  }
+  unlockBtn.addEventListener("click", unlock);
+  pwInput.addEventListener("keydown", function(e){ if(e.key==="Enter") unlock(); });
+
+  function loadConfig(){
+    fetch("config.json", {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("no config"); return r.json(); })
+      .then(function(cfg){ config = cfg; renderPanel(); })
+      .catch(function(){ config = FALLBACK_CONFIG; renderPanel(); });
+  }
+
+  function renderPanel(){
+    rateInput.value = config.rate;
+
+    tiersBox.innerHTML = "";
+    config.tiers.forEach(function(tier, i){
+      var row = document.createElement("div");
+      row.className = "tier-row";
+      row.innerHTML = 'A partir de <input type="number" class="tier-min" data-i="'+i+'" value="'+tier.min+'"> puntos → descuento <input type="number" class="tier-pct" data-i="'+i+'" value="'+tier.pct+'"> %';
+      tiersBox.appendChild(row);
+    });
+
+    categoriesBox.innerHTML = "";
+    config.categories.forEach(function(cat){
+      var card = document.createElement("div");
+      card.className = "card";
+      var h = document.createElement("h2");
+      h.textContent = cat.icon + " " + cat.name;
+      card.appendChild(h);
+      var sub = document.createElement("div");
+      sub.className = "sub";
+      sub.textContent = cat.currency ? "Precios en pesos (pago único)" : "Precios en puntos (plan mensual)";
+      card.appendChild(sub);
+
+      cat.items.forEach(function(item){
+        var row = document.createElement("div");
+        row.className = "field-row";
+        var name = document.createElement("div");
+        name.className = "field-name";
+        name.textContent = item.name;
+        row.appendChild(name);
+        var inputWrap = document.createElement("div");
+        inputWrap.className = "field-input";
+        if(cat.currency){
+          inputWrap.innerHTML = '<span>$</span><input type="number" min="0" step="10" value="'+item.price+'" data-cat="'+cat.id+'" data-item="'+item.id+'" class="item-price-input">';
+        } else {
+          inputWrap.innerHTML = '<input type="number" min="0" step="1" value="'+item.pts+'" data-cat="'+cat.id+'" data-item="'+item.id+'" class="item-pts-input"><span>pts</span>';
+        }
+        row.appendChild(inputWrap);
+        card.appendChild(row);
+      });
+      categoriesBox.appendChild(card);
+    });
+  }
+
+  function collectConfig(){
+    var newConfig = JSON.parse(JSON.stringify(config));
+    newConfig.rate = parseFloat(rateInput.value) || newConfig.rate;
+
+    document.querySelectorAll(".tier-min").forEach(function(inp){
+      var i = parseInt(inp.getAttribute("data-i"),10);
+      newConfig.tiers[i].min = parseFloat(inp.value) || 0;
+    });
+    document.querySelectorAll(".tier-pct").forEach(function(inp){
+      var i = parseInt(inp.getAttribute("data-i"),10);
+      newConfig.tiers[i].pct = parseFloat(inp.value) || 0;
+    });
+    newConfig.tiers.sort(function(a,b){ return b.min - a.min; });
+
+    document.querySelectorAll(".item-pts-input").forEach(function(inp){
+      var catId = inp.getAttribute("data-cat"), itemId = inp.getAttribute("data-item");
+      var cat = newConfig.categories.find(function(c){ return c.id===catId; });
+      var item = cat.items.find(function(it){ return it.id===itemId; });
+      item.pts = parseFloat(inp.value) || 0;
+    });
+    document.querySelectorAll(".item-price-input").forEach(function(inp){
+      var catId = inp.getAttribute("data-cat"), itemId = inp.getAttribute("data-item");
+      var cat = newConfig.categories.find(function(c){ return c.id===catId; });
+      var item = cat.items.find(function(it){ return it.id===itemId; });
+      item.price = parseFloat(inp.value) || 0;
+    });
+    return newConfig;
+  }
+
+  downloadCfgBtn.addEventListener("click", function(){
+    var updated = collectConfig();
+    var blob = new Blob([JSON.stringify(updated, null, 2)], {type:"application/json"});
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.download = "config.json";
+    link.href = url;
+    link.click();
+    URL.revokeObjectURL(url);
+    downloadCfgBtn.classList.add("saved");
+    downloadCfgBtn.textContent = "✓ Descargado — ahora súbelo a GitHub";
+    statusEl.textContent = "Reemplaza el archivo config.json de tu repositorio con este que acabas de descargar.";
+    setTimeout(function(){
+      downloadCfgBtn.classList.remove("saved");
+      downloadCfgBtn.textContent = "⬇️ Descargar config.json actualizado";
+    }, 3200);
+  });
+})();
+</script>
+</body>
+</html>

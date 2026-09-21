@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cotizador — Angie Guridi</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --bg:#FAF6F1; --surface:#FFFFFF; --surface-2:#F3ECE4;
+    --ink:#2B2230; --ink-soft:#6B6070;
+    --accent:#C4436B; --accent-ink:#FFFFFF; --accent-soft:#F6DCE4;
+    --amber:#DB9A3C; --amber-soft:#FBEBD2;
+    --line:#E9DFD6; --good:#4C8B6B; --good-soft:#DDEEE4;
+    --shadow: 0 12px 30px -14px rgba(43,34,48,0.25);
+    color-scheme: light;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Manrope',system-ui,sans-serif;
+    padding-inline:16px; padding-block:28px 120px; font-size:15px; line-height:1.5;
+  }
+  img{max-width:100%;}
+  [hidden]{display:none!important;}
+  .wrap{max-width:1040px;margin:0 auto;}
+  h1,h2,h3{font-family:'Fraunces',Georgia,serif;font-weight:600;text-wrap:balance;margin:0;}
+  .top{margin-bottom:28px;}
+  .top h1{font-size:clamp(26px,4.5vw,36px);color:var(--ink);}
+  .top p{color:var(--ink-soft);margin-top:6px;max-width:560px;}
+  .eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+  .layout{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;}
+  @media (max-width:820px){ .layout{grid-template-columns:1fr;} }
+  .category{background:var(--surface);border:1px solid var(--line);border-radius:16px;margin-bottom:18px;overflow:hidden;box-shadow:var(--shadow);}
+  .cat-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;cursor:pointer;user-select:none;}
+  .cat-head h2{font-size:18px;}
+  .cat-head .sub{font-size:12.5px;color:var(--ink-soft);font-weight:500;margin-top:2px;font-family:'Manrope';}
+  .chev{transition:transform .2s ease;color:var(--ink-soft);flex:none;}
+  .category.open .chev{transform:rotate(180deg);}
+  .cat-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;}
+  .category.open .cat-body{grid-template-rows:1fr;}
+  .cat-body-inner{overflow:hidden;}
+  .item-row{display:flex;align-items:center;gap:12px;padding:12px 18px;border-top:1px solid var(--line);}
+  .item-name{flex:1;min-width:0;font-weight:600;font-size:14.5px;}
+  .item-price{color:var(--ink-soft);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700;}
+  .qty{display:flex;align-items:center;gap:8px;background:var(--surface-2);border-radius:20px;padding:4px;flex:none;}
+  .qty button{width:26px;height:26px;border-radius:50%;border:none;background:var(--surface);color:var(--ink);font-size:16px;font-weight:700;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;}
+  .qty button:hover{background:var(--accent);color:var(--accent-ink);}
+  .qty .n{width:20px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums;}
+  .note-box{margin:0 18px 14px;padding:10px 12px;background:var(--amber-soft);border-radius:10px;font-size:12.5px;color:var(--ink-soft);}
+  .cart{position:sticky;top:16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);}
+  .cart h2{font-size:18px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .cart-empty{color:var(--ink-soft);font-size:13.5px;padding:10px 0;}
+  .cart-section{margin-bottom:14px;}
+  .cart-section-title{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;}
+  .cart-line{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:5px 0;}
+  .cart-line .l-name{color:var(--ink);font-weight:600;}
+  .cart-line .l-qty{color:var(--ink-soft);font-weight:500;}
+  .cart-line .l-val{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap;}
+  .divider{height:1px;background:var(--line);margin:14px 0;}
+  .tier-badge{display:inline-flex;align-items:center;gap:6px;background:var(--good-soft);color:var(--good);font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:20px;margin-bottom:12px;}
+  .totals-row{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;color:var(--ink-soft);padding:3px 0;}
+  .totals-row.strike .val{text-decoration:line-through;}
+  .grand{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;font-family:'Fraunces';font-weight:700;font-size:22px;}
+  .grand small{font-family:'Manrope';font-weight:700;font-size:12px;color:var(--ink-soft);display:block;text-align:right;}
+  .quick-total{display:flex;justify-content:space-between;align-items:baseline;font-family:'Fraunces';font-weight:700;font-size:19px;margin-top:6px;}
+  .btn{width:100%;margin-top:10px;border:none;border-radius:12px;padding:13px;font-family:'Manrope';font-weight:800;font-size:14.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);}
+  .btn-primary:hover{filter:brightness(1.05);}
+  .btn-primary.copied{background:var(--good);}
+  .btn-ghost{background:var(--surface-2);color:var(--ink);}
+  .btn-ghost:hover{background:var(--line);}
+  .tiers-info{margin-top:14px;font-size:11.5px;color:var(--ink-soft);line-height:1.6;}
+  .tiers-info b{color:var(--ink);}
+  .foot-note{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:30px;}
+
+  /* offscreen export receipt */
+  #exportCard{
+    position:absolute; left:-9999px; top:0; width:480px;
+    background:var(--surface); color:var(--ink); font-family:'Manrope',sans-serif;
+    padding:28px; border-radius:0;
+  }
+  #exportCard .ex-head{font-family:'Fraunces';font-size:22px;font-weight:700;margin-bottom:2px;}
+  #exportCard .ex-sub{color:var(--ink-soft);font-size:12.5px;margin-bottom:18px;}
+  #exportCard .ex-section-title{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:16px 0 8px;}
+  #exportCard .ex-line{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;}
+  #exportCard .ex-divider{height:1px;background:var(--line);margin:14px 0;}
+  #exportCard .ex-grand{display:flex;justify-content:space-between;align-items:baseline;font-family:'Fraunces';font-weight:700;font-size:24px;margin-top:6px;}
+  #exportCard .ex-tier{background:var(--good-soft);color:var(--good);font-weight:700;font-size:12.5px;padding:5px 10px;border-radius:20px;display:inline-block;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="eyebrow">✦ Cotizador de servicios</div>
+    <h1>Angie Guridi — Diseño</h1>
+    <p>Arma tu plan de diseño escogiendo lo que necesitas. El total se calcula solo, con descuento si juntas suficiente.</p>
+  </div>
+
+  <div class="layout">
+    <div id="categories"></div>
+
+    <div class="cart">
+      <h2>🛒 Tu cotización</h2>
+      <div id="cartBody"><div class="cart-empty">Aún no has agregado nada. Toca los botones “+” para armar tu plan.</div></div>
+      <button class="btn btn-primary" id="downloadBtn" type="button" style="display:none">🖼️ Descargar cotización (imagen)</button>
+      <button class="btn btn-ghost" id="copyBtn" type="button" style="display:none">📋 Copiar como texto</button>
+    </div>
+  </div>
+
+  <div class="foot-note">Precios sujetos a cambios · Angie Guridi Diseño</div>
+</div>
+
+<div id="exportCard"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var FALLBACK_CONFIG = {
+    rate: 50,
+    tiers: [{min:60,pct:15},{min:40,pct:10},{min:20,pct:5}],
+    categories: [
+      {id:"redes",icon:"📱",name:"Redes y contenido",sub:"Publicaciones, videos, planeación y textos para tus redes",monthly:true,items:[
+        {id:"post",name:"Publicación (foto o imagen)",pts:1},
+        {id:"historia",name:"Historia",pts:1},
+        {id:"carrusel",name:"Carrusel (varias imágenes)",pts:2},
+        {id:"video",name:"Video o reel",pts:2},
+        {id:"copy",name:"Redacción de textos — todo el mes",pts:4},
+        {id:"plan",name:"Plan de contenido del mes",pts:3}
+      ]},
+      {id:"produccion",icon:"🎥",name:"¿Necesitas que yo tome las fotos o grabe?",sub:"Solo si el cliente no manda material propio — se agrega una vez y ya cubre el contenido del mes",monthly:true,items:[
+        {id:"sesion-media",name:"Sesión de producción — medio día",pts:5},
+        {id:"sesion-completa",name:"Sesión de producción — día completo",pts:9}
+      ]},
+      {id:"web",icon:"💻",name:"Páginas web y apps",sub:"Diseño de pantallas, landing pages y sitios completos",monthly:true,items:[
+        {id:"pantalla",name:"Pantalla de app o web",pts:2},
+        {id:"landing",name:"Página web sencilla (una sección)",pts:6},
+        {id:"web-completa",name:"Página web completa (varias secciones)",pts:10},
+        {id:"ajustes",name:"Ajustes a algo que ya existe",pts:4}
+      ]},
+      {id:"marca",icon:"🎨",name:"Marca e identidad",sub:"Logo, identidad visual y estrategia de marca",monthly:true,items:[
+        {id:"logo",name:"Logo",pts:5},
+        {id:"paquete",name:"Paquete básico (logo + colores + tipografía)",pts:8},
+        {id:"manual",name:"Manual de marca completo",pts:12},
+        {id:"concepto",name:"Concepto de marca (nombre, personalidad, público)",pts:6}
+      ]},
+      {id:"rapidos",icon:"⚡",name:"Diseños rápidos",sub:"Encargos sueltos, sin plan mensual — se paga directo en pesos",monthly:false,currency:true,items:[
+        {id:"flyer",name:"Flyer",price:150},
+        {id:"banner",name:"Banner",price:150},
+        {id:"tarjeta",name:"Tarjeta de presentación",price:150},
+        {id:"portada",name:"Portada para redes",price:150},
+        {id:"lona",name:"Lona",price:250}
+      ]}
+    ]
+  };
+
+  var state = { qty:{}, config:null };
+  var openCats = {};
+
+  var fmt = new Intl.NumberFormat("es-MX", {style:"currency", currency:"MXN", maximumFractionDigits:0});
+
+  var catsEl = document.getElementById("categories");
+  var cartBodyEl = document.getElementById("cartBody");
+  var copyBtn = document.getElementById("copyBtn");
+  var downloadBtn = document.getElementById("downloadBtn");
+  var exportCard = document.getElementById("exportCard");
+
+  function findItem(id){
+    for(var i=0;i<state.config.categories.length;i++){
+      var c = state.config.categories[i];
+      for(var j=0;j<c.items.length;j++){
+        if(c.items[j].id === id) return {cat:c, item:c.items[j]};
+      }
+    }
+    return null;
+  }
+
+  function tierFor(points){
+    var tiers = state.config.tiers;
+    for(var i=0;i<tiers.length;i++){ if(points >= tiers[i].min) return tiers[i]; }
+    return null;
+  }
+
+  function renderCategories(){
+    catsEl.innerHTML = "";
+    state.config.categories.forEach(function(cat, idx){
+      if(openCats[cat.id] === undefined) openCats[cat.id] = idx===0;
+      var wrap = document.createElement("div");
+      wrap.className = "category" + (openCats[cat.id] ? " open" : "");
+
+      var head = document.createElement("div");
+      head.className = "cat-head";
+      head.innerHTML = '<div><h2>'+cat.icon+' '+cat.name+'</h2><div class="sub">'+cat.sub+'</div></div>'+
+        '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      head.addEventListener("click", function(){
+        openCats[cat.id] = !openCats[cat.id];
+        wrap.classList.toggle("open");
+      });
+      wrap.appendChild(head);
+
+      var body = document.createElement("div");
+      body.className = "cat-body";
+      var inner = document.createElement("div");
+      inner.className = "cat-body-inner";
+
+      if(cat.id === "produccion"){
+        var note = document.createElement("div");
+        note.className = "note-box";
+        note.textContent = "💡 Si tomas una sesión de producción, las publicaciones y videos de ese contenido se cotizan a precio normal — la sesión ya cubre el trabajo extra de grabar o tomar las fotos.";
+        inner.appendChild(note);
+      }
+
+      cat.items.forEach(function(item){
+        if(state.qty[item.id] === undefined) state.qty[item.id] = 0;
+        var row = document.createElement("div");
+        row.className = "item-row";
+        var nameEl = document.createElement("div");
+        nameEl.className = "item-name";
+        nameEl.textContent = item.name;
+        row.appendChild(nameEl);
+
+        var priceEl = document.createElement("div");
+        priceEl.className = "item-price";
+        priceEl.textContent = cat.currency ? fmt.format(item.price) : (item.pts + (item.pts===1?" pt":" pts"));
+        row.appendChild(priceEl);
+
+        var qtyEl = document.createElement("div");
+        qtyEl.className = "qty";
+        qtyEl.innerHTML = '<button class="minus" data-id="'+item.id+'" type="button">−</button>'+
+          '<span class="n" data-n="'+item.id+'">'+(state.qty[item.id]||0)+'</span>'+
+          '<button class="plus" data-id="'+item.id+'" type="button">+</button>';
+        row.appendChild(qtyEl);
+        inner.appendChild(row);
+      });
+
+      body.appendChild(inner);
+      wrap.appendChild(body);
+      catsEl.appendChild(wrap);
+    });
+
+    catsEl.querySelectorAll(".plus").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = btn.getAttribute("data-id");
+        state.qty[id] = (state.qty[id]||0)+1;
+        updateQtyDisplay(id);
+        renderCart();
+      });
+    });
+    catsEl.querySelectorAll(".minus").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = btn.getAttribute("data-id");
+        state.qty[id] = Math.max(0,(state.qty[id]||0)-1);
+        updateQtyDisplay(id);
+        renderCart();
+      });
+    });
+  }
+
+  function updateQtyDisplay(id){
+    var el = catsEl.querySelector('.n[data-n="'+id+'"]');
+    if(el) el.textContent = state.qty[id]||0;
+  }
+
+  function computeTotals(){
+    var rate = state.config.rate;
+    var monthlyLines = [], quickLines = [], totalPoints = 0, quickTotal = 0;
+    state.config.categories.forEach(function(cat){
+      cat.items.forEach(function(item){
+        var q = state.qty[item.id]||0;
+        if(q<=0) return;
+        if(cat.currency){
+          var sub = item.price*q;
+          quickTotal += sub;
+          quickLines.push({name:item.name, qty:q, val:sub});
+        } else {
+          var pts = item.pts*q;
+          totalPoints += pts;
+          monthlyLines.push({name:item.name, qty:q, pts:pts});
+        }
+      });
+    });
+    var tier = tierFor(totalPoints);
+    var rawTotal = totalPoints*rate;
+    var pct = tier ? tier.pct : 0;
+    var finalTotal = rawTotal*(1-pct/100);
+    return {monthlyLines:monthlyLines, quickLines:quickLines, totalPoints:totalPoints, quickTotal:quickTotal, tier:tier, rawTotal:rawTotal, pct:pct, finalTotal:finalTotal, rate:rate};
+  }
+
+  function renderCart(){
+    var t = computeTotals();
+    if(t.monthlyLines.length===0 && t.quickLines.length===0){
+      cartBodyEl.innerHTML = '<div class="cart-empty">Aún no has agregado nada. Toca los botones “+” para armar tu plan.</div>';
+      copyBtn.style.display="none"; downloadBtn.style.display="none";
+      return;
+    }
+    var html = "";
+    if(t.monthlyLines.length){
+      html += '<div class="cart-section"><div class="cart-section-title">Plan mensual</div>';
+      t.monthlyLines.forEach(function(l){
+        html += '<div class="cart-line"><span class="l-name">'+l.name+' <span class="l-qty">×'+l.qty+'</span></span><span class="l-val">'+l.pts+' pt'+(l.pts===1?"":"s")+'</span></div>';
+      });
+      html += '</div><div class="divider"></div>';
+      if(t.tier) html += '<div class="tier-badge">🎉 Descuento por volumen: -'+t.pct+'%</div>';
+      html += '<div class="totals-row"><span>Puntos totales</span><span class="val">'+t.totalPoints+' pts</span></div>';
+      if(t.tier) html += '<div class="totals-row strike"><span>Precio sin descuento</span><span class="val">'+fmt.format(t.rawTotal)+'</span></div>';
+      html += '<div class="grand"><span>'+fmt.format(t.finalTotal)+'<small>al mes</small></span></div>';
+    }
+    if(t.quickLines.length){
+      if(t.monthlyLines.length) html += '<div class="divider"></div>';
+      html += '<div class="cart-section"><div class="cart-section-title">Encargos sueltos (pago único)</div>';
+      t.quickLines.forEach(function(l){
+        html += '<div class="cart-line"><span class="l-name">'+l.name+' <span class="l-qty">×'+l.qty+'</span></span><span class="l-val">'+fmt.format(l.val)+'</span></div>';
+      });
+      html += '<div class="quick-total"><span>Total</span><span>'+fmt.format(t.quickTotal)+'</span></div></div>';
+    }
+    html += '<div class="tiers-info">Descuentos por volumen en el plan mensual: <b>20+ pts</b> −5%&nbsp;·&nbsp;<b>40+ pts</b> −10%&nbsp;·&nbsp;<b>60+ pts</b> −15%.</div>';
+    cartBodyEl.innerHTML = html;
+    copyBtn.style.display="flex"; downloadBtn.style.display="flex";
+  }
+
+  function buildExportCard(t){
+    var html = '<div class="ex-head">Angie Guridi — Diseño</div><div class="ex-sub">Cotización · '+new Date().toLocaleDateString('es-MX',{day:'numeric',month:'long',year:'numeric'})+'</div>';
+    if(t.monthlyLines.length){
+      html += '<div class="ex-section-title">Plan mensual</div>';
+      t.monthlyLines.forEach(function(l){
+        html += '<div class="ex-line"><span>'+l.name+' ×'+l.qty+'</span><span>'+l.pts+' pt'+(l.pts===1?"":"s")+'</span></div>';
+      });
+      html += '<div class="ex-divider"></div>';
+      if(t.tier) html += '<div class="ex-tier">Descuento por volumen −'+t.pct+'%</div>';
+      html += '<div class="ex-line"><span>Puntos totales</span><span>'+t.totalPoints+' pts</span></div>';
+      html += '<div class="ex-grand"><span>Total al mes</span><span>'+fmt.format(t.finalTotal)+'</span></div>';
+    }
+    if(t.quickLines.length){
+      if(t.monthlyLines.length) html += '<div class="ex-divider"></div>';
+      html += '<div class="ex-section-title">Encargos sueltos</div>';
+      t.quickLines.forEach(function(l){
+        html += '<div class="ex-line"><span>'+l.name+' ×'+l.qty+'</span><span>'+fmt.format(l.val)+'</span></div>';
+      });
+      html += '<div class="ex-line" style="font-weight:800;margin-top:4px;"><span>Total</span><span>'+fmt.format(t.quickTotal)+'</span></div>';
+    }
+    exportCard.innerHTML = html;
+  }
+
+  copyBtn.addEventListener("click", function(){
+    var t = computeTotals();
+    var text = "Cotización — Angie Guridi Diseño\n";
+    if(t.monthlyLines.length){
+      text += "\nPlan mensual:\n";
+      t.monthlyLines.forEach(function(l){ text += "• "+l.name+" ×"+l.qty+"\n"; });
+      text += "Total de puntos: "+t.totalPoints+" pts\n";
+      if(t.tier) text += "Descuento por volumen: -"+t.pct+"%\n";
+      text += "Precio del plan: "+fmt.format(t.finalTotal)+" al mes\n";
+    }
+    if(t.quickLines.length){
+      text += "\nEncargos sueltos:\n";
+      t.quickLines.forEach(function(l){ text += "• "+l.name+" ×"+l.qty+" — "+fmt.format(l.val)+"\n"; });
+      text += "Total encargos: "+fmt.format(t.quickTotal)+"\n";
+    }
+    navigator.clipboard.writeText(text).then(function(){
+      copyBtn.classList.add("copied");
+      copyBtn.textContent = "✓ ¡Copiado!";
+      setTimeout(function(){ copyBtn.classList.remove("copied"); copyBtn.textContent = "📋 Copiar como texto"; }, 1800);
+    }).catch(function(){});
+  });
+
+  downloadBtn.addEventListener("click", function(){
+    var t = computeTotals();
+    buildExportCard(t);
+    if(typeof html2canvas === "undefined"){
+      alert("No se pudo generar la imagen. Intenta de nuevo o revisa tu conexión.");
+      return;
+    }
+    html2canvas(exportCard, {backgroundColor:"#FFFFFF", scale:2}).then(function(canvas){
+      var link = document.createElement("a");
+      link.download = "cotizacion-angie-guridi.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+  });
+
+  function init(config){
+    state.config = config;
+    renderCategories();
+    renderCart();
+  }
+
+  fetch("config.json", {cache:"no-store"})
+    .then(function(r){ if(!r.ok) throw new Error("no config"); return r.json(); })
+    .then(function(cfg){ init(cfg); })
+    .catch(function(){ init(FALLBACK_CONFIG); });
+})();
+</script>
+</body>
+</html>
