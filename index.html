@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cotizador — Angie Guridi</title>
+<!-- 🖼️ AQUÍ VA TU FAVICON: reemplaza "favicon.png" por el nombre de tu archivo cuando lo tengas y súbelo junto a los demás -->
+<link rel="icon" href="favicon.png">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
 
@@ -32,8 +34,13 @@
   .eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
   .help-btn{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--accent);font-weight:800;font-size:16px;cursor:pointer;box-shadow:var(--shadow);}
 
-  .section-title{margin:36px 0 4px;font-size:21px;}
   .section-sub{color:var(--ink-soft);font-size:13.5px;margin-bottom:16px;}
+
+  /* Tabs */
+  .tabs{display:flex;gap:8px;margin:20px 0 4px;border-bottom:2px solid var(--line);}
+  .tab-btn{border:none;background:transparent;padding:10px 4px;margin-bottom:-2px;font-family:'Manrope';font-weight:800;font-size:14.5px;color:var(--ink-soft);cursor:pointer;border-bottom:2px solid transparent;}
+  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+  @media (max-width:480px){ .tabs{gap:2px;} .tab-btn{font-size:12.5px;padding:8px 6px;} }
 
   /* Packages */
   .pillar{margin-bottom:26px;}
@@ -44,23 +51,31 @@
   .pkg-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;}
   .pkg-card.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft), var(--shadow);}
   .pkg-name{font-family:'Fraunces';font-weight:700;font-size:17px;}
-  .pkg-resumen{color:var(--ink-soft);font-size:12.5px;flex:1;line-height:1.5;}
+  .pkg-resumen{color:var(--ink-soft);font-size:12.5px;line-height:1.5;}
   .pkg-price{font-family:'Fraunces';font-weight:700;font-size:20px;font-variant-numeric:tabular-nums;}
   .pkg-price small{font-family:'Manrope';font-weight:600;font-size:11px;color:var(--ink-soft);}
   .pkg-btn{border:none;border-radius:10px;padding:10px;font-family:'Manrope';font-weight:800;font-size:13px;cursor:pointer;background:var(--surface-2);color:var(--ink);}
   .pkg-card.selected .pkg-btn{background:var(--accent);color:var(--accent-ink);}
 
-  .pkg-hero{background:linear-gradient(135deg,var(--accent-soft),var(--surface));border:2px solid var(--accent);border-radius:18px;padding:22px;box-shadow:var(--shadow);margin-bottom:10px;}
+  .pkg-prod-note{font-size:11.5px;color:var(--ink-soft);background:var(--surface-2);border-radius:8px;padding:7px 9px;}
+  .pkg-prod-note.full{background:var(--good-soft);color:var(--good);font-weight:700;}
+  .pkg-prod-check{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink);background:var(--amber-soft);border-radius:10px;padding:9px 10px;cursor:pointer;}
+  .pkg-prod-check input{margin-top:2px;flex:none;}
+  .pkg-prod-check b{display:block;margin-bottom:2px;}
+  .pkg-detail-toggle{background:none;border:none;color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;padding:2px 0;text-align:left;}
+  .pkg-detail{font-size:12px;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:8px;display:flex;flex-direction:column;gap:3px;}
+  .pkg-detail .dline{display:flex;justify-content:space-between;gap:8px;}
+  .pkg-detail .dtotal{font-weight:800;color:var(--ink);border-top:1px solid var(--line);padding-top:5px;margin-top:2px;}
+
+  .pkg-hero{background:linear-gradient(135deg,var(--accent-soft),var(--surface));border:2px solid var(--accent);border-radius:18px;padding:22px;box-shadow:var(--shadow);margin-bottom:10px;display:flex;flex-direction:column;gap:10px;}
   .pkg-hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
   .pkg-hero .pkg-name{font-size:22px;}
-  .pkg-hero-prices{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0;}
+  .pkg-hero-prices{display:flex;gap:18px;flex-wrap:wrap;}
   .pkg-hero-prices .p{font-family:'Fraunces';font-weight:700;font-size:22px;}
   .pkg-hero-prices .p small{display:block;font-family:'Manrope';font-weight:700;font-size:11px;color:var(--ink-soft);}
-  .pkg-hero-bonos{font-size:13px;color:var(--ink-soft);margin:6px 0 12px;}
+  .pkg-hero-bonos{font-size:13px;color:var(--ink-soft);margin:0;padding-left:18px;}
   .pkg-hero-bonos li{margin-bottom:2px;}
   .badge-especial{background:var(--accent);color:var(--accent-ink);font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;letter-spacing:.04em;}
-
-  .divider-line{height:1px;background:var(--line);margin:34px 0 0;}
 
   /* categories */
   .layout{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;margin-top:18px;}
@@ -134,7 +149,6 @@
   .bottom-bar .bb-total{font-family:'Fraunces';font-weight:700;font-size:16px;}
   .bottom-bar .bb-total small{display:block;font-family:'Manrope';font-size:10.5px;color:var(--ink-soft);font-weight:600;}
   .bottom-bar button{border:none;background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:10px 16px;font-weight:800;font-size:13px;cursor:pointer;}
-  /* Only ever shown on narrow screens, and only once JS adds .visible (has cart items) */
   .bottom-bar.visible{display:none;}
   @media (max-width:820px){ .bottom-bar.visible{display:flex;} }
 
@@ -185,17 +199,21 @@
     <button class="help-btn" id="helpBtn" type="button" title="¿Cómo funciona?">?</button>
   </div>
 
-  <h2 class="section-title">🎁 Paquetes</h2>
-  <div class="section-sub">Un atajo para no pensar tanto — si algo no encaja, sigue bajando y arma tu plan pieza por pieza.</div>
-  <div id="packagesBox"></div>
-
-  <div class="divider-line"></div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="paquetes" type="button">🎁 Paquetes</button>
+    <button class="tab-btn" data-tab="carta" type="button">🧩 Arma tu plan a la carta</button>
+  </div>
 
   <div class="layout">
     <div>
-      <h2 class="section-title" style="margin-top:0;">🧩 Arma tu plan a la carta</h2>
-      <div class="section-sub">Suma exactamente lo que necesitas.</div>
-      <div id="categories"></div>
+      <div id="tabPaquetes">
+        <div class="section-sub">Un atajo para no pensar tanto — si algo no encaja, cambia a "Arma tu plan a la carta".</div>
+        <div id="packagesBox"></div>
+      </div>
+      <div id="tabCarta" hidden>
+        <div class="section-sub">Suma exactamente lo que necesitas.</div>
+        <div id="categories"></div>
+      </div>
     </div>
 
     <div class="cart" id="cartAnchor">
@@ -239,7 +257,7 @@
     categories:[], terminos:[]
   };
 
-  var state = { qty:{}, toggles:{}, packagesSelected:{}, config:null, customText:"" };
+  var state = { qty:{}, toggles:{}, packagesSelected:{}, packageMode:{}, packageDetailOpen:{}, config:null, customText:"" };
   var openCats = {};
 
   var fmt = new Intl.NumberFormat("es-MX", {style:"currency", currency:"MXN", maximumFractionDigits:0});
@@ -262,12 +280,18 @@
   var paymentMethodText = document.getElementById("paymentMethodText");
   var whatsappText = document.getElementById("whatsappText");
 
-  function findItem(id){
+  function getItemDef(id){
     for(var i=0;i<state.config.categories.length;i++){
       var c = state.config.categories[i];
-      for(var j=0;j<c.items.length;j++){ if(c.items[j].id===id) return {cat:c,item:c.items[j]}; }
+      for(var j=0;j<c.items.length;j++){ if(c.items[j].id===id) return c.items[j]; }
     }
     return null;
+  }
+
+  function ptsForKey(item, key){
+    if(typeof item.pts === "number") return item.pts;
+    if(key && item.pts[key]!==undefined) return item.pts[key];
+    return 0;
   }
 
   function itemPts(cat, item){
@@ -292,40 +316,118 @@
     return null;
   }
 
+  function modeKeyFor(toggleName, full){
+    if(toggleName==="fotos") return full ? "angie" : "cliente";
+    if(toggleName==="video") return full ? "grabacion" : "edicion";
+    return null;
+  }
+
+  /* Compute a bundle of {ref,qty} lines under a given production mode (full=true/false) */
+  function computeBundle(lines, full){
+    var pts = 0, detail = [];
+    (lines||[]).forEach(function(line){
+      var item = getItemDef(line.ref);
+      if(!item) return;
+      var key = item.toggle ? modeKeyFor(item.toggle, full) : null;
+      var unit = ptsForKey(item, key);
+      var totalPts = unit*line.qty;
+      pts += totalPts;
+      detail.push({name:item.name, qty:line.qty, unit:unit, pts:totalPts});
+    });
+    var tier = tierFor(pts);
+    var rate = state.config.rate;
+    var raw = pts*rate;
+    var price = raw*(1-(tier?tier.pct/100:0));
+    return {pts:pts, tier:tier, raw:raw, price:price, detail:detail};
+  }
+
   /* ---------- PACKAGES ---------- */
   function renderPackages(){
     var pk = state.config.packages || {redes:[],web:[],marca:[],completo:[]};
     var html = "";
     var pillars = [
-      {key:"redes", label:"📱 Redes y contenido"},
-      {key:"web", label:"💻 Páginas web y apps"},
-      {key:"marca", label:"🎨 Marca e identidad"}
+      {key:"redes", label:"📱 Redes y contenido", unit:"/mes"},
+      {key:"web", label:"💻 Páginas web y apps", unit:" único"},
+      {key:"marca", label:"🎨 Marca e identidad", unit:" único"}
     ];
     pillars.forEach(function(p){
       var list = pk[p.key]||[];
       if(!list.length) return;
       html += '<div class="pillar"><div class="pillar-head"><h3>'+p.label+'</h3></div><div class="pkg-grid">';
       list.forEach(function(pack){
+        var full = !!state.packageMode[pack.id];
+        var bundle = computeBundle(pack.items, full);
         var sel = !!state.packagesSelected[pack.id];
+        var open = !!state.packageDetailOpen[pack.id];
+
         html += '<div class="pkg-card'+(sel?" selected":"")+'" data-pkg="'+pack.id+'">'+
           '<div class="pkg-name">'+pack.nombre+'</div>'+
           '<div class="pkg-resumen">'+pack.resumen+'</div>'+
-          '<div class="pkg-price">'+fmt.format(pack.precio)+(p.key==="redes"?'<small> /mes</small>':'<small> único</small>')+'</div>'+
-          '<button class="pkg-btn" type="button" data-pkg="'+pack.id+'" data-group="'+p.key+'">'+(sel?"✓ Agregado — Quitar":"+ Agregar")+'</button>'+
+          '<div class="pkg-price">'+fmt.format(bundle.price)+'<small>'+p.unit+'</small></div>';
+
+        if(pack.hasProdToggle){
+          var baseB = computeBundle(pack.items, false);
+          var fullB = computeBundle(pack.items, true);
+          var delta = fullB.price - baseB.price;
+          html += '<div class="pkg-prod-note'+(full?" full":"")+'">'+(full ? "✨ Angie se encarga de absolutamente todo" : "Este plan asume que tú nos compartes tus fotos y video.")+'</div>'+
+            '<label class="pkg-prod-check"><input type="checkbox" class="pkg-prod-input" data-pkg="'+pack.id+'" '+(full?"checked":"")+'>'+
+            '<span><b>Que Angie se encargue de todo</b>Ella toma tus fotos, graba y edita tus videos — tú solo recibes resultados listos. (+'+fmt.format(delta)+p.unit+')</span></label>';
+        }
+
+        html += '<button class="pkg-detail-toggle" data-pkg="'+pack.id+'" type="button">'+(open?"Ocultar detalle ▴":"Ver qué incluye ▾")+'</button>';
+        if(open){
+          html += '<div class="pkg-detail">';
+          bundle.detail.forEach(function(d){
+            html += '<div class="dline"><span>'+d.name+' ×'+d.qty+'</span><span>'+d.pts+' pt'+(d.pts===1?"":"s")+'</span></div>';
+          });
+          html += '<div class="dline"><span>Total puntos</span><span>'+bundle.pts+' pts'+(bundle.tier?" (−"+bundle.tier.pct+"%)":"")+'</span></div>';
+          html += '<div class="dline dtotal"><span>Precio</span><span>'+fmt.format(bundle.price)+p.unit+'</span></div>';
+          html += '</div>';
+        }
+
+        html += '<button class="pkg-btn" type="button" data-pkg="'+pack.id+'" data-group="'+p.key+'">'+(sel?"✓ Agregado — Quitar":"+ Agregar")+'</button>'+
           '</div>';
       });
       html += '</div></div>';
     });
+
     (pk.completo||[]).forEach(function(pack){
+      var full = state.packageMode[pack.id];
+      if(full===undefined) full = !!pack.prodDefault;
       var sel = !!state.packagesSelected[pack.id];
+      var open = !!state.packageDetailOpen[pack.id];
+      var arranqueB = computeBundle(pack.arranque, full);
+      var mensualB = computeBundle(pack.mensual, full);
+
       html += '<div class="pkg-hero'+(sel?" selected":"")+'">'+
         '<div class="pkg-hero-top"><div><span class="badge-especial">✨ EL MÁS COMPLETO</span><div class="pkg-name" style="margin-top:8px;">'+pack.nombre+'</div></div></div>'+
-        '<div class="pkg-hero-prices"><div class="p">'+fmt.format(pack.precioUnico)+'<small>arranque único</small></div><div class="p">'+fmt.format(pack.precioMensual)+'<small>al mes después</small></div></div>'+
-        '<div class="pkg-resumen" style="margin-bottom:8px;">'+pack.resumen+'</div>'+
-        '<ul class="pkg-hero-bonos">'+(pack.bonos||[]).map(function(b){return '<li>🎁 '+b+'</li>';}).join("")+'</ul>'+
-        '<button class="pkg-btn" type="button" data-pkg="'+pack.id+'" data-group="completo" style="'+(sel?'background:var(--accent);color:#fff;':'')+'">'+(sel?"✓ Agregado — Quitar":"+ Agregar paquete completo")+'</button>'+
+        '<div class="pkg-hero-prices"><div class="p">'+fmt.format(arranqueB.price)+'<small>arranque único</small></div><div class="p">'+fmt.format(mensualB.price)+'<small>al mes después</small></div></div>'+
+        '<div class="pkg-resumen">'+pack.resumen+'</div>'+
+        '<ul class="pkg-hero-bonos">'+(pack.bonos||[]).map(function(b){return '<li>🎁 '+b+'</li>';}).join("")+'</ul>';
+
+      if(pack.hasProdToggle){
+        var baseM = computeBundle(pack.mensual,false), fullM = computeBundle(pack.mensual,true);
+        var deltaM = fullM.price - baseM.price;
+        html += '<div class="pkg-prod-note'+(full?" full":"")+'">'+(full ? "✨ Angie se encarga de absolutamente todo: fotos, video, diseño, edición, planeación y análisis" : "Este plan asume que tú nos compartes tus fotos y video.")+'</div>'+
+          '<label class="pkg-prod-check"><input type="checkbox" class="pkg-prod-input" data-pkg="'+pack.id+'" '+(full?"checked":"")+'>'+
+          '<span><b>Que Angie se encargue de todo</b>Ella toma tus fotos, graba y edita tus videos — tú solo recibes resultados listos. (+'+fmt.format(deltaM)+'/mes)</span></label>';
+      }
+
+      html += '<button class="pkg-detail-toggle" data-pkg="'+pack.id+'" type="button">'+(open?"Ocultar detalle ▴":"Ver qué incluye ▾")+'</button>';
+      if(open){
+        html += '<div class="pkg-detail"><b style="color:var(--ink);">Arranque único:</b>';
+        arranqueB.detail.forEach(function(d){ html += '<div class="dline"><span>'+d.name+' ×'+d.qty+'</span><span>'+d.pts+' pts</span></div>'; });
+        html += '<div class="dline dtotal"><span>Total arranque</span><span>'+fmt.format(arranqueB.price)+'</span></div>';
+        html += '<b style="color:var(--ink);margin-top:6px;">Mensual:</b>';
+        mensualB.detail.forEach(function(d){ html += '<div class="dline"><span>'+d.name+' ×'+d.qty+'</span><span>'+d.pts+' pts</span></div>'; });
+        html += '<div class="dline dtotal"><span>Total mensual</span><span>'+fmt.format(mensualB.price)+'</span></div>';
+        html += '</div>';
+      }
+
+      html += '<button class="pkg-btn" type="button" data-pkg="'+pack.id+'" data-group="completo" style="'+(sel?'background:var(--accent);color:#fff;':'')+'">'+(sel?"✓ Agregado — Quitar":"+ Agregar paquete completo")+'</button>'+
         '</div>';
     });
+
     packagesBox.innerHTML = html;
 
     packagesBox.querySelectorAll(".pkg-btn").forEach(function(btn){
@@ -333,7 +435,6 @@
         var id = btn.getAttribute("data-pkg");
         var group = btn.getAttribute("data-group");
         var wasSelected = !!state.packagesSelected[id];
-        // radio behavior within group (deselect siblings), except completo which is standalone
         if(!wasSelected && group !== "completo"){
           (pk[group]||[]).forEach(function(p2){ state.packagesSelected[p2.id] = false; });
         }
@@ -342,9 +443,23 @@
         renderCart();
       });
     });
+    packagesBox.querySelectorAll(".pkg-prod-input").forEach(function(chk){
+      chk.addEventListener("change", function(){
+        state.packageMode[chk.getAttribute("data-pkg")] = chk.checked;
+        renderPackages();
+        renderCart();
+      });
+    });
+    packagesBox.querySelectorAll(".pkg-detail-toggle").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = btn.getAttribute("data-pkg");
+        state.packageDetailOpen[id] = !state.packageDetailOpen[id];
+        renderPackages();
+      });
+    });
   }
 
-  /* ---------- CATEGORIES ---------- */
+  /* ---------- CATEGORIES (à la carte) ---------- */
   function renderCategories(){
     catsEl.innerHTML = "";
     state.config.categories.forEach(function(cat, idx){
@@ -506,20 +621,25 @@
     var pct = tier?tier.pct:0;
     var finalItemized = rawTotal*(1-pct/100);
 
-    // packages
     var pkgMonthlyLines = [], pkgOneTimeLines = [];
     var pk = state.config.packages||{};
     ["redes","web","marca"].forEach(function(group){
       (pk[group]||[]).forEach(function(pack){
         if(!state.packagesSelected[pack.id]) return;
-        if(group==="redes") pkgMonthlyLines.push({name:"Paquete "+pack.nombre+" (redes)", val:pack.precio});
-        else pkgOneTimeLines.push({name:"Paquete "+pack.nombre+" ("+(group==="web"?"web":"marca")+")", val:pack.precio});
+        var full = !!state.packageMode[pack.id];
+        var b = computeBundle(pack.items, full);
+        if(group==="redes") pkgMonthlyLines.push({name:"Paquete "+pack.nombre+" (redes)"+(full?" — Angie hace todo":""), val:b.price});
+        else pkgOneTimeLines.push({name:"Paquete "+pack.nombre+" ("+(group==="web"?"web":"marca")+")", val:b.price});
       });
     });
     (pk.completo||[]).forEach(function(pack){
       if(!state.packagesSelected[pack.id]) return;
-      pkgOneTimeLines.push({name:pack.nombre+" — arranque", val:pack.precioUnico});
-      pkgMonthlyLines.push({name:pack.nombre+" — mensual", val:pack.precioMensual});
+      var full = state.packageMode[pack.id];
+      if(full===undefined) full = !!pack.prodDefault;
+      var arranqueB = computeBundle(pack.arranque, full);
+      var mensualB = computeBundle(pack.mensual, full);
+      pkgOneTimeLines.push({name:pack.nombre+" — arranque", val:arranqueB.price});
+      pkgMonthlyLines.push({name:pack.nombre+" — mensual"+(full?" — Angie hace todo":""), val:mensualB.price});
     });
 
     var pkgMonthlyTotal = pkgMonthlyLines.reduce(function(s,l){return s+l.val;},0);
@@ -584,7 +704,7 @@
 
     cartBodyEl.innerHTML = html;
     copyBtn.style.display="flex"; downloadBtn.style.display="flex";
-    waBtn.style.display = "none"; // shown after download
+    waBtn.style.display = "none";
 
     bottomBar.classList.add("visible");
     var bbParts = [];
@@ -656,7 +776,18 @@
     });
   });
 
-  /* ---------- intro / terms / footer ---------- */
+  /* ---------- tabs ---------- */
+  document.querySelectorAll(".tab-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      var tab = btn.getAttribute("data-tab");
+      document.getElementById("tabPaquetes").hidden = (tab !== "paquetes");
+      document.getElementById("tabCarta").hidden = (tab !== "carta");
+    });
+  });
+
+  /* ---------- intro / terms ---------- */
   function renderIntro(){
     introList.innerHTML = (state.config.intro||[]).map(function(line,i){
       return '<li><span class="modal-num">'+(i+1)+'</span><span>'+line+'</span></li>';

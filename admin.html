@@ -53,10 +53,10 @@
   .status{font-size:12.5px;color:var(--ink-soft);margin-top:8px;}
   .text-field{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);font-family:'Manrope';font-size:14px;margin-bottom:10px;}
   textarea.text-field{min-height:70px;resize:vertical;}
-  .pkg-edit-row{display:grid;grid-template-columns:1fr 100px;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);}
-  .pkg-edit-row:first-of-type{border-top:none;}
-  .pkg-edit-row .pname{font-weight:700;font-size:13.5px;}
-  .pkg-edit-row .presumen{font-size:11.5px;color:var(--ink-soft);}
+  .pkg-preview-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:13.5px;}
+  .pkg-preview-row:first-of-type{border-top:none;}
+  .pkg-preview-row .pname{font-weight:700;}
+  .pkg-preview-row .pval{font-weight:800;font-variant-numeric:tabular-nums;color:var(--accent);}
   .terms-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;}
   .terms-item textarea{flex:1;min-height:40px;}
   .terms-item button{flex:none;border:none;background:var(--surface-2);border-radius:8px;padding:8px 10px;cursor:pointer;font-weight:700;}
@@ -80,7 +80,8 @@
     <p>Cambia lo que necesites y descarga el archivo actualizado.</p>
 
     <div class="note">
-      <b>Cómo se actualiza tu página:</b> aquí editas y descargas <code>config.json</code>. Sube ese archivo a tu repositorio de GitHub reemplazando el que ya está ahí, y la página pública se actualiza sola.
+      <b>Cómo se actualiza tu página:</b> aquí editas y descargas <code>config.json</code>. Sube ese archivo a tu repositorio de GitHub reemplazando el que ya está ahí, y la página pública se actualiza sola.<br><br>
+      <b>Los paquetes ya no se editan aquí con un precio fijo</b> — se calculan solos a partir del precio por punto y los puntos de cada servicio (abajo). Cámbialos ahí y los paquetes se ajustan automáticamente. Aquí abajo puedes ver una vista previa de cómo quedan.
     </div>
 
     <div class="card">
@@ -103,13 +104,13 @@
       <div id="tiersBox"></div>
     </div>
 
-    <div class="card">
-      <h2>🎁 Paquetes</h2>
-      <div class="sub">Precios de cada paquete</div>
-      <div id="packagesEditBox"></div>
-    </div>
-
     <div id="categoriesBox"></div>
+
+    <div class="card">
+      <h2>🎁 Vista previa de paquetes</h2>
+      <div class="sub">Se recalculan solos según lo de arriba — aquí solo los ves, no se editan directo</div>
+      <div id="packagesPreviewBox"></div>
+    </div>
 
     <div class="card">
       <h2>👋 Mensaje de bienvenida (popup)</h2>
@@ -156,13 +157,15 @@
   var whatsappInput = document.getElementById("whatsappInput");
   var paymentInput = document.getElementById("paymentInput");
   var tiersBox = document.getElementById("tiersBox");
-  var packagesEditBox = document.getElementById("packagesEditBox");
+  var packagesPreviewBox = document.getElementById("packagesPreviewBox");
   var categoriesBox = document.getElementById("categoriesBox");
   var introEditBox = document.getElementById("introEditBox");
   var termsEditBox = document.getElementById("termsEditBox");
   var addTermBtn = document.getElementById("addTermBtn");
   var downloadCfgBtn = document.getElementById("downloadCfgBtn");
   var statusEl = document.getElementById("status");
+
+  var fmt = new Intl.NumberFormat("es-MX", {style:"currency", currency:"MXN", maximumFractionDigits:0});
 
   function unlock(){
     if(pwInput.value === PASSWORD){
@@ -179,6 +182,40 @@
       .catch(function(){ config = FALLBACK_CONFIG; renderPanel(); });
   }
 
+  function getItemDef(cfg, id){
+    for(var i=0;i<cfg.categories.length;i++){
+      var c = cfg.categories[i];
+      for(var j=0;j<c.items.length;j++){ if(c.items[j].id===id) return c.items[j]; }
+    }
+    return null;
+  }
+  function ptsForKey(item, key){
+    if(typeof item.pts === "number") return item.pts;
+    if(key && item.pts[key]!==undefined) return item.pts[key];
+    return 0;
+  }
+  function modeKeyFor(toggleName, full){
+    if(toggleName==="fotos") return full ? "angie" : "cliente";
+    if(toggleName==="video") return full ? "grabacion" : "edicion";
+    return null;
+  }
+  function tierFor(cfg, points){
+    for(var i=0;i<cfg.tiers.length;i++){ if(points>=cfg.tiers[i].min) return cfg.tiers[i]; }
+    return null;
+  }
+  function computeBundle(cfg, lines, full){
+    var pts = 0;
+    (lines||[]).forEach(function(line){
+      var item = getItemDef(cfg, line.ref);
+      if(!item) return;
+      var key = item.toggle ? modeKeyFor(item.toggle, full) : null;
+      pts += ptsForKey(item, key)*line.qty;
+    });
+    var tier = tierFor(cfg, pts);
+    var price = pts*cfg.rate*(1-(tier?tier.pct/100:0));
+    return {pts:pts, price:price};
+  }
+
   function renderPanel(){
     rateInput.value = config.rate;
     whatsappInput.value = config.whatsapp || "";
@@ -190,31 +227,6 @@
       row.className = "tier-row";
       row.innerHTML = 'A partir de <input type="number" class="tier-min" data-i="'+i+'" value="'+tier.min+'"> puntos → descuento <input type="number" class="tier-pct" data-i="'+i+'" value="'+tier.pct+'"> %';
       tiersBox.appendChild(row);
-    });
-
-    // packages
-    packagesEditBox.innerHTML = "";
-    var pk = config.packages || {redes:[],web:[],marca:[],completo:[]};
-    ["redes","web","marca"].forEach(function(group){
-      (pk[group]||[]).forEach(function(pack){
-        var row = document.createElement("div");
-        row.className = "pkg-edit-row";
-        row.innerHTML = '<div><div class="pname">'+group+' — '+pack.nombre+'</div><div class="presumen">'+pack.resumen+'</div></div>'+
-          '<div class="field-input wide"><span>$</span><input type="number" class="pkg-price" data-group="'+group+'" data-id="'+pack.id+'" value="'+pack.precio+'"></div>';
-        packagesEditBox.appendChild(row);
-      });
-    });
-    (pk.completo||[]).forEach(function(pack){
-      var row = document.createElement("div");
-      row.className = "pkg-edit-row";
-      row.innerHTML = '<div><div class="pname">'+pack.nombre+' — arranque</div></div>'+
-        '<div class="field-input wide"><span>$</span><input type="number" class="pkg-unico" data-id="'+pack.id+'" value="'+pack.precioUnico+'"></div>';
-      packagesEditBox.appendChild(row);
-      var row2 = document.createElement("div");
-      row2.className = "pkg-edit-row";
-      row2.innerHTML = '<div><div class="pname">'+pack.nombre+' — mensual</div></div>'+
-        '<div class="field-input wide"><span>$</span><input type="number" class="pkg-mensual" data-id="'+pack.id+'" value="'+pack.precioMensual+'"></div>';
-      packagesEditBox.appendChild(row2);
     });
 
     // categories (items)
@@ -254,6 +266,8 @@
       categoriesBox.appendChild(card);
     });
 
+    renderPackagesPreview();
+
     // intro
     introEditBox.innerHTML = "";
     (config.intro||["","",""]).forEach(function(line,i){
@@ -263,6 +277,54 @@
     });
 
     renderTerms();
+
+    // recompute preview live as points/rate change
+    categoriesBox.querySelectorAll("input").forEach(function(inp){
+      inp.addEventListener("input", function(){
+        var live = collectConfig();
+        renderPackagesPreview(live);
+      });
+    });
+    rateInput.addEventListener("input", function(){
+      var live = collectConfig();
+      renderPackagesPreview(live);
+    });
+  }
+
+  function renderPackagesPreview(cfgOverride){
+    var cfg = cfgOverride || config;
+    var pk = cfg.packages || {redes:[],web:[],marca:[],completo:[]};
+    packagesPreviewBox.innerHTML = "";
+    ["redes","web","marca"].forEach(function(group){
+      (pk[group]||[]).forEach(function(pack){
+        var b = computeBundle(cfg, pack.items, false);
+        var row = document.createElement("div");
+        row.className = "pkg-preview-row";
+        var label = group+" — "+pack.nombre + (pack.hasProdToggle ? " (base)" : "");
+        row.innerHTML = '<span class="pname">'+label+'</span><span class="pval">'+fmt.format(b.price)+(group==="redes"?"/mes":" único")+'</span>';
+        packagesPreviewBox.appendChild(row);
+        if(pack.hasProdToggle){
+          var bFull = computeBundle(cfg, pack.items, true);
+          var row2 = document.createElement("div");
+          row2.className = "pkg-preview-row";
+          row2.innerHTML = '<span class="pname" style="font-weight:500;color:var(--ink-soft);">'+group+' — '+pack.nombre+' (Angie hace todo)</span><span class="pval">'+fmt.format(bFull.price)+'/mes</span>';
+          packagesPreviewBox.appendChild(row2);
+        }
+      });
+    });
+    (pk.completo||[]).forEach(function(pack){
+      var full = !!pack.prodDefault;
+      var arranqueB = computeBundle(cfg, pack.arranque, full);
+      var mensualB = computeBundle(cfg, pack.mensual, full);
+      var row = document.createElement("div");
+      row.className = "pkg-preview-row";
+      row.innerHTML = '<span class="pname">'+pack.nombre+' — arranque</span><span class="pval">'+fmt.format(arranqueB.price)+' único</span>';
+      packagesPreviewBox.appendChild(row);
+      var row2 = document.createElement("div");
+      row2.className = "pkg-preview-row";
+      row2.innerHTML = '<span class="pname">'+pack.nombre+' — mensual</span><span class="pval">'+fmt.format(mensualB.price)+'/mes</span>';
+      packagesPreviewBox.appendChild(row2);
+    });
   }
 
   function renderTerms(){
@@ -296,19 +358,6 @@
     document.querySelectorAll(".tier-min").forEach(function(inp){ newConfig.tiers[parseInt(inp.getAttribute("data-i"),10)].min = parseFloat(inp.value)||0; });
     document.querySelectorAll(".tier-pct").forEach(function(inp){ newConfig.tiers[parseInt(inp.getAttribute("data-i"),10)].pct = parseFloat(inp.value)||0; });
     newConfig.tiers.sort(function(a,b){ return b.min-a.min; });
-
-    ["redes","web","marca"].forEach(function(group){
-      (newConfig.packages[group]||[]).forEach(function(pack){
-        var inp = document.querySelector('.pkg-price[data-group="'+group+'"][data-id="'+pack.id+'"]');
-        if(inp) pack.precio = parseFloat(inp.value)||0;
-      });
-    });
-    (newConfig.packages.completo||[]).forEach(function(pack){
-      var u = document.querySelector('.pkg-unico[data-id="'+pack.id+'"]');
-      var m = document.querySelector('.pkg-mensual[data-id="'+pack.id+'"]');
-      if(u) pack.precioUnico = parseFloat(u.value)||0;
-      if(m) pack.precioMensual = parseFloat(m.value)||0;
-    });
 
     document.querySelectorAll(".item-pts-input").forEach(function(inp){
       var cat = newConfig.categories.find(function(c){return c.id===inp.getAttribute("data-cat");});

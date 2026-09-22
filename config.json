@@ -14,22 +14,31 @@
   ],
   "packages": {
     "redes": [
-      { "id": "redes-basico", "nombre": "Básico", "resumen": "8 publicaciones + 2 historias + plan de contenido", "precio": 1170 },
-      { "id": "redes-medio", "nombre": "Medio", "resumen": "12 publicaciones + 4 historias + 4 videos (edición) + plan + redacción", "precio": 2650 },
-      { "id": "redes-deluxe", "nombre": "Deluxe", "resumen": "20 publicaciones + 8 historias + 8 videos (edición) + plan + redacción", "precio": 4100 }
+      { "id": "redes-basico", "nombre": "Básico", "resumen": "8 publicaciones + 2 historias + plan de contenido", "hasProdToggle": true,
+        "items": [ {"ref":"post","qty":8}, {"ref":"historia","qty":2}, {"ref":"plan","qty":1} ] },
+      { "id": "redes-medio", "nombre": "Medio", "resumen": "12 publicaciones + 4 historias + 4 videos + plan + redacción", "hasProdToggle": true,
+        "items": [ {"ref":"post","qty":12}, {"ref":"historia","qty":4}, {"ref":"video","qty":4}, {"ref":"plan","qty":1}, {"ref":"copy","qty":1} ] },
+      { "id": "redes-deluxe", "nombre": "Deluxe", "resumen": "20 publicaciones + 8 historias + 8 videos + plan + redacción", "hasProdToggle": true,
+        "items": [ {"ref":"post","qty":20}, {"ref":"historia","qty":8}, {"ref":"video","qty":8}, {"ref":"plan","qty":1}, {"ref":"copy","qty":1} ] }
     ],
     "web": [
-      { "id": "web-basico", "nombre": "Básico", "resumen": "Landing sencilla (una sección)", "precio": 540 },
-      { "id": "web-medio", "nombre": "Medio", "resumen": "Página web completa (varias secciones)", "precio": 900 },
-      { "id": "web-deluxe", "nombre": "Deluxe", "resumen": "Web completa + 3 pantallas extra + ajustes continuos", "precio": 1700 }
+      { "id": "web-basico", "nombre": "Básico", "resumen": "Landing sencilla (una sección)", "items": [ {"ref":"landing","qty":1} ] },
+      { "id": "web-medio", "nombre": "Medio", "resumen": "Página web completa (varias secciones)", "items": [ {"ref":"web-completa","qty":1} ] },
+      { "id": "web-deluxe", "nombre": "Deluxe", "resumen": "Web completa + 3 pantallas extra + ajustes continuos", "items": [ {"ref":"web-completa","qty":1}, {"ref":"pantalla","qty":3}, {"ref":"ajustes","qty":1} ] }
     ],
     "marca": [
-      { "id": "marca-basico", "nombre": "Básico", "resumen": "Logo", "precio": 450 },
-      { "id": "marca-medio", "nombre": "Medio", "resumen": "Logo + colores + tipografía", "precio": 720 },
-      { "id": "marca-deluxe", "nombre": "Deluxe", "resumen": "Manual de marca completo + concepto de marca", "precio": 1620 }
+      { "id": "marca-basico", "nombre": "Básico", "resumen": "Logo", "items": [ {"ref":"logo","qty":1} ] },
+      { "id": "marca-medio", "nombre": "Medio", "resumen": "Logo + colores + tipografía", "items": [ {"ref":"paquete","qty":1} ] },
+      { "id": "marca-deluxe", "nombre": "Deluxe", "resumen": "Manual de marca completo + concepto de marca", "items": [ {"ref":"manual","qty":1}, {"ref":"concepto","qty":1} ] }
     ],
     "completo": [
-      { "id": "todo-incluido", "nombre": "Todo Incluido", "resumen": "Identidad completa + Web deluxe (arranque único) + Redes deluxe (mensual)", "precioUnico": 3250, "precioMensual": 4100, "bonos": ["Auditoría de redes de regalo (valor $540)", "Entregas urgentes sin recargo"] }
+      { "id": "todo-incluido", "nombre": "Todo Incluido",
+        "resumen": "Identidad completa + Web deluxe (arranque único) + Redes deluxe (mensual)",
+        "hasProdToggle": true, "prodDefault": true,
+        "arranque": [ {"ref":"manual","qty":1}, {"ref":"concepto","qty":1}, {"ref":"web-completa","qty":1}, {"ref":"pantalla","qty":3}, {"ref":"ajustes","qty":1} ],
+        "mensual": [ {"ref":"post","qty":20}, {"ref":"historia","qty":8}, {"ref":"video","qty":8}, {"ref":"plan","qty":1}, {"ref":"copy","qty":1} ],
+        "bonos": ["Auditoría de redes de regalo (valor $540)", "Entregas urgentes sin recargo"]
+      }
     ]
   },
   "categories": [
