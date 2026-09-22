@@ -10,17 +10,16 @@
     --bg:#FAF6F1; --surface:#FFFFFF; --surface-2:#F3ECE4;
     --ink:#2B2230; --ink-soft:#6B6070;
     --accent:#C4436B; --accent-ink:#FFFFFF;
-    --amber-soft:#FBEBD2; --line:#E9DFD6; --good:#4C8B6B; --good-soft:#DDEEE4;
+    --amber-soft:#FBEBD2; --line:#E9DFD6; --good:#4C8B6B;
     --shadow: 0 12px 30px -14px rgba(43,34,48,0.25);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;}
   body{background:var(--bg);color:var(--ink);font-family:'Manrope',system-ui,sans-serif;padding:28px 16px 100px;font-size:15px;}
-  .wrap{max-width:720px;margin:0 auto;}
+  .wrap{max-width:760px;margin:0 auto;}
   h1,h2{font-family:'Fraunces',Georgia,serif;font-weight:700;margin:0;}
   .eyebrow{display:inline-flex;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
 
-  /* lock screen */
   #lock{max-width:360px;margin:14vh auto 0;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;box-shadow:var(--shadow);text-align:center;}
   #lock h1{font-size:22px;margin-bottom:6px;}
   #lock p{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px;}
@@ -29,29 +28,39 @@
   #lockError{color:var(--accent);font-size:12.5px;min-height:16px;margin-top:6px;}
 
   #panel{display:none;}
-  .top p{color:var(--ink-soft);margin-top:6px;}
+  .top p{color:var(--ink-soft);margin:6px 0 18px;}
   .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:var(--shadow);}
   .card h2{font-size:17px;margin-bottom:4px;}
   .card .sub{color:var(--ink-soft);font-size:12.5px;margin-bottom:14px;}
   .field-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line);}
   .field-row:first-of-type{border-top:none;}
   .field-name{font-weight:600;font-size:14px;}
-  .field-input{display:flex;align-items:center;gap:6px;background:var(--surface-2);border-radius:10px;padding:6px 10px;}
+  .field-input{display:flex;align-items:center;gap:6px;background:var(--surface-2);border-radius:10px;padding:6px 10px;flex:none;}
   .field-input span{color:var(--ink-soft);font-size:13px;}
-  .field-input input{width:70px;border:none;background:transparent;font-family:'Manrope';font-weight:700;font-size:14.5px;text-align:right;}
+  .field-input input{width:64px;border:none;background:transparent;font-family:'Manrope';font-weight:700;font-size:14.5px;text-align:right;}
   .field-input input:focus{outline:none;}
+  .field-input.wide input{width:100px;}
   .rate-highlight{background:var(--amber-soft);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-  .rate-highlight .field-name{font-size:15px;}
-  .tier-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px;}
+  .tier-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px;flex-wrap:wrap;}
   .tier-row:first-of-type{border-top:none;}
   .tier-row input{width:50px;padding:5px 7px;border-radius:8px;border:1px solid var(--line);font-family:'Manrope';font-weight:700;text-align:center;}
-  .actions{position:sticky;bottom:0;background:linear-gradient(to top, var(--bg) 60%, transparent);padding:16px 0 6px;display:flex;gap:10px;flex-wrap:wrap;}
+  .actions{position:sticky;bottom:0;background:linear-gradient(to top, var(--bg) 65%, transparent);padding:16px 0 6px;display:flex;gap:10px;flex-wrap:wrap;}
   .btn{border:none;border-radius:12px;padding:13px 18px;font-family:'Manrope';font-weight:800;font-size:14.5px;cursor:pointer;}
   .btn-primary{background:var(--accent);color:var(--accent-ink);flex:1;}
   .btn-primary.saved{background:var(--good);}
   .note{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:14px 16px;font-size:12.5px;color:var(--ink-soft);line-height:1.7;margin-bottom:18px;}
   .note b{color:var(--ink);}
   .status{font-size:12.5px;color:var(--ink-soft);margin-top:8px;}
+  .text-field{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);font-family:'Manrope';font-size:14px;margin-bottom:10px;}
+  textarea.text-field{min-height:70px;resize:vertical;}
+  .pkg-edit-row{display:grid;grid-template-columns:1fr 100px;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);}
+  .pkg-edit-row:first-of-type{border-top:none;}
+  .pkg-edit-row .pname{font-weight:700;font-size:13.5px;}
+  .pkg-edit-row .presumen{font-size:11.5px;color:var(--ink-soft);}
+  .terms-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;}
+  .terms-item textarea{flex:1;min-height:40px;}
+  .terms-item button{flex:none;border:none;background:var(--surface-2);border-radius:8px;padding:8px 10px;cursor:pointer;font-weight:700;}
+  .add-term-btn{margin-top:8px;border:1px dashed var(--line);background:transparent;border-radius:10px;padding:8px 12px;font-size:12.5px;font-weight:700;color:var(--ink-soft);cursor:pointer;width:100%;}
 </style>
 </head>
 <body>
@@ -59,7 +68,7 @@
 
   <div id="lock">
     <h1>🔒 Panel de precios</h1>
-    <p>Escribe la contraseña para editar los precios del cotizador.</p>
+    <p>Escribe la contraseña para editar tu cotizador.</p>
     <input type="password" id="pw" placeholder="Contraseña" autocomplete="off">
     <button id="unlockBtn" type="button">Entrar</button>
     <div id="lockError"></div>
@@ -67,12 +76,11 @@
 
   <div id="panel">
     <div class="eyebrow">✦ Panel de precios</div>
-    <h1>Ajusta tus precios</h1>
-    <p style="color:var(--ink-soft);margin:6px 0 18px;">Cambia lo que necesites y descarga el archivo actualizado.</p>
+    <h1>Ajusta tu cotizador</h1>
+    <p>Cambia lo que necesites y descarga el archivo actualizado.</p>
 
     <div class="note">
-      <b>Cómo se actualiza tu página:</b> aquí solo editas y descargas un archivo llamado <code>config.json</code>.
-      Para que tus clientes vean los precios nuevos, sube ese archivo a tu repositorio de GitHub reemplazando el <code>config.json</code> que ya está ahí. En cuanto lo reemplaces, la página pública se actualiza sola.
+      <b>Cómo se actualiza tu página:</b> aquí editas y descargas <code>config.json</code>. Sube ese archivo a tu repositorio de GitHub reemplazando el que ya está ahí, y la página pública se actualiza sola.
     </div>
 
     <div class="card">
@@ -83,12 +91,37 @@
     </div>
 
     <div class="card">
+      <h2>Contacto y pago</h2>
+      <div class="sub">Se muestran en la página pública</div>
+      <div class="field-row"><div class="field-name">WhatsApp (con código de país)</div><div class="field-input wide"><input type="text" id="whatsappInput"></div></div>
+      <div class="field-row"><div class="field-name">Método de pago</div><div class="field-input wide"><input type="text" id="paymentInput"></div></div>
+    </div>
+
+    <div class="card">
       <h2>Descuentos por volumen</h2>
       <div class="sub">A partir de cuántos puntos se activa cada descuento</div>
       <div id="tiersBox"></div>
     </div>
 
+    <div class="card">
+      <h2>🎁 Paquetes</h2>
+      <div class="sub">Precios de cada paquete</div>
+      <div id="packagesEditBox"></div>
+    </div>
+
     <div id="categoriesBox"></div>
+
+    <div class="card">
+      <h2>👋 Mensaje de bienvenida (popup)</h2>
+      <div class="sub">Las 3 líneas que ve el cliente al entrar</div>
+      <div id="introEditBox"></div>
+    </div>
+
+    <div class="card">
+      <h2>📋 Términos y condiciones</h2>
+      <div id="termsEditBox"></div>
+      <button class="add-term-btn" id="addTermBtn" type="button">+ Agregar línea</button>
+    </div>
 
     <div class="actions">
       <button class="btn btn-primary" id="downloadCfgBtn" type="button">⬇️ Descargar config.json actualizado</button>
@@ -105,41 +138,11 @@
   var PASSWORD = "kokopop24";
 
   var FALLBACK_CONFIG = {
-    rate: 50,
-    tiers: [{min:60,pct:15},{min:40,pct:10},{min:20,pct:5}],
-    categories: [
-      {id:"redes",icon:"📱",name:"Redes y contenido",sub:"Publicaciones, videos, planeación y textos para tus redes",monthly:true,items:[
-        {id:"post",name:"Publicación (foto o imagen)",pts:1},
-        {id:"historia",name:"Historia",pts:1},
-        {id:"carrusel",name:"Carrusel (varias imágenes)",pts:2},
-        {id:"video",name:"Video o reel",pts:2},
-        {id:"copy",name:"Redacción de textos — todo el mes",pts:4},
-        {id:"plan",name:"Plan de contenido del mes",pts:3}
-      ]},
-      {id:"produccion",icon:"🎥",name:"¿Necesitas que yo tome las fotos o grabe?",sub:"Solo si el cliente no manda material propio — se agrega una vez y ya cubre el contenido del mes",monthly:true,items:[
-        {id:"sesion-media",name:"Sesión de producción — medio día",pts:5},
-        {id:"sesion-completa",name:"Sesión de producción — día completo",pts:9}
-      ]},
-      {id:"web",icon:"💻",name:"Páginas web y apps",sub:"Diseño de pantallas, landing pages y sitios completos",monthly:true,items:[
-        {id:"pantalla",name:"Pantalla de app o web",pts:2},
-        {id:"landing",name:"Página web sencilla (una sección)",pts:6},
-        {id:"web-completa",name:"Página web completa (varias secciones)",pts:10},
-        {id:"ajustes",name:"Ajustes a algo que ya existe",pts:4}
-      ]},
-      {id:"marca",icon:"🎨",name:"Marca e identidad",sub:"Logo, identidad visual y estrategia de marca",monthly:true,items:[
-        {id:"logo",name:"Logo",pts:5},
-        {id:"paquete",name:"Paquete básico (logo + colores + tipografía)",pts:8},
-        {id:"manual",name:"Manual de marca completo",pts:12},
-        {id:"concepto",name:"Concepto de marca (nombre, personalidad, público)",pts:6}
-      ]},
-      {id:"rapidos",icon:"⚡",name:"Diseños rápidos",sub:"Encargos sueltos, sin plan mensual — se paga directo en pesos",monthly:false,currency:true,items:[
-        {id:"flyer",name:"Flyer",price:150},
-        {id:"banner",name:"Banner",price:150},
-        {id:"tarjeta",name:"Tarjeta de presentación",price:150},
-        {id:"portada",name:"Portada para redes",price:150},
-        {id:"lona",name:"Lona",price:250}
-      ]}
-    ]
+    rate:90, whatsapp:"527717948519", paymentMethod:"Transferencia bancaria",
+    tiers:[{min:60,pct:15},{min:40,pct:10},{min:20,pct:5}],
+    intro:["Cada servicio vale ciertos puntos, y los puntos se convierten en pesos.","Agrega lo que necesites con los botones + — el precio se calcula solo.","Al final descargas tu cotización y nos la mandas por WhatsApp."],
+    packages:{redes:[],web:[],marca:[],completo:[]},
+    categories:[], terminos:[]
   };
 
   var config = null;
@@ -150,19 +153,21 @@
   var unlockBtn = document.getElementById("unlockBtn");
   var lockError = document.getElementById("lockError");
   var rateInput = document.getElementById("rateInput");
+  var whatsappInput = document.getElementById("whatsappInput");
+  var paymentInput = document.getElementById("paymentInput");
   var tiersBox = document.getElementById("tiersBox");
+  var packagesEditBox = document.getElementById("packagesEditBox");
   var categoriesBox = document.getElementById("categoriesBox");
+  var introEditBox = document.getElementById("introEditBox");
+  var termsEditBox = document.getElementById("termsEditBox");
+  var addTermBtn = document.getElementById("addTermBtn");
   var downloadCfgBtn = document.getElementById("downloadCfgBtn");
   var statusEl = document.getElementById("status");
 
   function unlock(){
     if(pwInput.value === PASSWORD){
-      lockEl.style.display = "none";
-      panelEl.style.display = "block";
-      loadConfig();
-    } else {
-      lockError.textContent = "Contraseña incorrecta, intenta de nuevo.";
-    }
+      lockEl.style.display="none"; panelEl.style.display="block"; loadConfig();
+    } else { lockError.textContent = "Contraseña incorrecta, intenta de nuevo."; }
   }
   unlockBtn.addEventListener("click", unlock);
   pwInput.addEventListener("keydown", function(e){ if(e.key==="Enter") unlock(); });
@@ -176,93 +181,173 @@
 
   function renderPanel(){
     rateInput.value = config.rate;
+    whatsappInput.value = config.whatsapp || "";
+    paymentInput.value = config.paymentMethod || "";
 
     tiersBox.innerHTML = "";
-    config.tiers.forEach(function(tier, i){
+    (config.tiers||[]).forEach(function(tier,i){
       var row = document.createElement("div");
       row.className = "tier-row";
       row.innerHTML = 'A partir de <input type="number" class="tier-min" data-i="'+i+'" value="'+tier.min+'"> puntos → descuento <input type="number" class="tier-pct" data-i="'+i+'" value="'+tier.pct+'"> %';
       tiersBox.appendChild(row);
     });
 
+    // packages
+    packagesEditBox.innerHTML = "";
+    var pk = config.packages || {redes:[],web:[],marca:[],completo:[]};
+    ["redes","web","marca"].forEach(function(group){
+      (pk[group]||[]).forEach(function(pack){
+        var row = document.createElement("div");
+        row.className = "pkg-edit-row";
+        row.innerHTML = '<div><div class="pname">'+group+' — '+pack.nombre+'</div><div class="presumen">'+pack.resumen+'</div></div>'+
+          '<div class="field-input wide"><span>$</span><input type="number" class="pkg-price" data-group="'+group+'" data-id="'+pack.id+'" value="'+pack.precio+'"></div>';
+        packagesEditBox.appendChild(row);
+      });
+    });
+    (pk.completo||[]).forEach(function(pack){
+      var row = document.createElement("div");
+      row.className = "pkg-edit-row";
+      row.innerHTML = '<div><div class="pname">'+pack.nombre+' — arranque</div></div>'+
+        '<div class="field-input wide"><span>$</span><input type="number" class="pkg-unico" data-id="'+pack.id+'" value="'+pack.precioUnico+'"></div>';
+      packagesEditBox.appendChild(row);
+      var row2 = document.createElement("div");
+      row2.className = "pkg-edit-row";
+      row2.innerHTML = '<div><div class="pname">'+pack.nombre+' — mensual</div></div>'+
+        '<div class="field-input wide"><span>$</span><input type="number" class="pkg-mensual" data-id="'+pack.id+'" value="'+pack.precioMensual+'"></div>';
+      packagesEditBox.appendChild(row2);
+    });
+
+    // categories (items)
     categoriesBox.innerHTML = "";
-    config.categories.forEach(function(cat){
+    (config.categories||[]).forEach(function(cat){
       var card = document.createElement("div");
       card.className = "card";
-      var h = document.createElement("h2");
-      h.textContent = cat.icon + " " + cat.name;
-      card.appendChild(h);
-      var sub = document.createElement("div");
-      sub.className = "sub";
-      sub.textContent = cat.currency ? "Precios en pesos (pago único)" : "Precios en puntos (plan mensual)";
+      var h = document.createElement("h2"); h.textContent = cat.icon+" "+cat.name; card.appendChild(h);
+      var sub = document.createElement("div"); sub.className="sub";
+      sub.textContent = cat.currency ? "Precios en pesos (pago único)" : "Precios en puntos";
       card.appendChild(sub);
 
       cat.items.forEach(function(item){
-        var row = document.createElement("div");
-        row.className = "field-row";
-        var name = document.createElement("div");
-        name.className = "field-name";
-        name.textContent = item.name;
-        row.appendChild(name);
-        var inputWrap = document.createElement("div");
-        inputWrap.className = "field-input";
-        if(cat.currency){
-          inputWrap.innerHTML = '<span>$</span><input type="number" min="0" step="10" value="'+item.price+'" data-cat="'+cat.id+'" data-item="'+item.id+'" class="item-price-input">';
+        if(item.toggle && cat.toggles && cat.toggles[item.toggle]){
+          var opts = cat.toggles[item.toggle].options;
+          opts.forEach(function(opt){
+            var row = document.createElement("div");
+            row.className = "field-row";
+            row.innerHTML = '<div class="field-name">'+item.name+' <span style="color:var(--ink-soft);font-weight:500;">— '+opt.label+'</span></div>'+
+              '<div class="field-input"><input type="number" min="0" step="1" value="'+item.pts[opt.id]+'" data-cat="'+cat.id+'" data-item="'+item.id+'" data-toggleopt="'+opt.id+'" class="item-pts-toggle-input"><span>pts</span></div>';
+            card.appendChild(row);
+          });
         } else {
-          inputWrap.innerHTML = '<input type="number" min="0" step="1" value="'+item.pts+'" data-cat="'+cat.id+'" data-item="'+item.id+'" class="item-pts-input"><span>pts</span>';
+          var row2 = document.createElement("div");
+          row2.className = "field-row";
+          var name2 = document.createElement("div"); name2.className="field-name"; name2.textContent=item.name; row2.appendChild(name2);
+          var inputWrap = document.createElement("div"); inputWrap.className="field-input";
+          if(cat.currency){
+            inputWrap.innerHTML = '<span>$</span><input type="number" min="0" step="10" value="'+item.price+'" data-cat="'+cat.id+'" data-item="'+item.id+'" class="item-price-input">';
+          } else {
+            inputWrap.innerHTML = '<input type="number" min="0" step="1" value="'+item.pts+'" data-cat="'+cat.id+'" data-item="'+item.id+'" class="item-pts-input"><span>pts</span>';
+          }
+          row2.appendChild(inputWrap);
+          card.appendChild(row2);
         }
-        row.appendChild(inputWrap);
-        card.appendChild(row);
       });
       categoriesBox.appendChild(card);
     });
+
+    // intro
+    introEditBox.innerHTML = "";
+    (config.intro||["","",""]).forEach(function(line,i){
+      var ta = document.createElement("textarea");
+      ta.className = "text-field intro-line"; ta.rows=2; ta.value = line; ta.setAttribute("data-i", i);
+      introEditBox.appendChild(ta);
+    });
+
+    renderTerms();
   }
+
+  function renderTerms(){
+    termsEditBox.innerHTML = "";
+    (config.terminos||[]).forEach(function(t,i){
+      var row = document.createElement("div");
+      row.className = "terms-item";
+      row.innerHTML = '<textarea class="text-field term-line" data-i="'+i+'">'+t+'</textarea><button type="button" class="rm-term" data-i="'+i+'">✕</button>';
+      termsEditBox.appendChild(row);
+    });
+    termsEditBox.querySelectorAll(".rm-term").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var i = parseInt(btn.getAttribute("data-i"),10);
+        config.terminos.splice(i,1);
+        renderTerms();
+      });
+    });
+  }
+  addTermBtn.addEventListener("click", function(){
+    config.terminos = config.terminos || [];
+    config.terminos.push("");
+    renderTerms();
+  });
 
   function collectConfig(){
     var newConfig = JSON.parse(JSON.stringify(config));
     newConfig.rate = parseFloat(rateInput.value) || newConfig.rate;
+    newConfig.whatsapp = whatsappInput.value.trim();
+    newConfig.paymentMethod = paymentInput.value.trim();
 
-    document.querySelectorAll(".tier-min").forEach(function(inp){
-      var i = parseInt(inp.getAttribute("data-i"),10);
-      newConfig.tiers[i].min = parseFloat(inp.value) || 0;
+    document.querySelectorAll(".tier-min").forEach(function(inp){ newConfig.tiers[parseInt(inp.getAttribute("data-i"),10)].min = parseFloat(inp.value)||0; });
+    document.querySelectorAll(".tier-pct").forEach(function(inp){ newConfig.tiers[parseInt(inp.getAttribute("data-i"),10)].pct = parseFloat(inp.value)||0; });
+    newConfig.tiers.sort(function(a,b){ return b.min-a.min; });
+
+    ["redes","web","marca"].forEach(function(group){
+      (newConfig.packages[group]||[]).forEach(function(pack){
+        var inp = document.querySelector('.pkg-price[data-group="'+group+'"][data-id="'+pack.id+'"]');
+        if(inp) pack.precio = parseFloat(inp.value)||0;
+      });
     });
-    document.querySelectorAll(".tier-pct").forEach(function(inp){
-      var i = parseInt(inp.getAttribute("data-i"),10);
-      newConfig.tiers[i].pct = parseFloat(inp.value) || 0;
+    (newConfig.packages.completo||[]).forEach(function(pack){
+      var u = document.querySelector('.pkg-unico[data-id="'+pack.id+'"]');
+      var m = document.querySelector('.pkg-mensual[data-id="'+pack.id+'"]');
+      if(u) pack.precioUnico = parseFloat(u.value)||0;
+      if(m) pack.precioMensual = parseFloat(m.value)||0;
     });
-    newConfig.tiers.sort(function(a,b){ return b.min - a.min; });
 
     document.querySelectorAll(".item-pts-input").forEach(function(inp){
-      var catId = inp.getAttribute("data-cat"), itemId = inp.getAttribute("data-item");
-      var cat = newConfig.categories.find(function(c){ return c.id===catId; });
-      var item = cat.items.find(function(it){ return it.id===itemId; });
-      item.pts = parseFloat(inp.value) || 0;
+      var cat = newConfig.categories.find(function(c){return c.id===inp.getAttribute("data-cat");});
+      var item = cat.items.find(function(it){return it.id===inp.getAttribute("data-item");});
+      item.pts = parseFloat(inp.value)||0;
     });
     document.querySelectorAll(".item-price-input").forEach(function(inp){
-      var catId = inp.getAttribute("data-cat"), itemId = inp.getAttribute("data-item");
-      var cat = newConfig.categories.find(function(c){ return c.id===catId; });
-      var item = cat.items.find(function(it){ return it.id===itemId; });
-      item.price = parseFloat(inp.value) || 0;
+      var cat = newConfig.categories.find(function(c){return c.id===inp.getAttribute("data-cat");});
+      var item = cat.items.find(function(it){return it.id===inp.getAttribute("data-item");});
+      item.price = parseFloat(inp.value)||0;
     });
+    document.querySelectorAll(".item-pts-toggle-input").forEach(function(inp){
+      var cat = newConfig.categories.find(function(c){return c.id===inp.getAttribute("data-cat");});
+      var item = cat.items.find(function(it){return it.id===inp.getAttribute("data-item");});
+      item.pts[inp.getAttribute("data-toggleopt")] = parseFloat(inp.value)||0;
+    });
+
+    var introLines = [];
+    document.querySelectorAll(".intro-line").forEach(function(ta){ introLines.push(ta.value); });
+    newConfig.intro = introLines;
+
+    var termLines = [];
+    document.querySelectorAll(".term-line").forEach(function(ta){ termLines.push(ta.value); });
+    newConfig.terminos = termLines;
+
     return newConfig;
   }
 
   downloadCfgBtn.addEventListener("click", function(){
     var updated = collectConfig();
-    var blob = new Blob([JSON.stringify(updated, null, 2)], {type:"application/json"});
+    var blob = new Blob([JSON.stringify(updated,null,2)], {type:"application/json"});
     var url = URL.createObjectURL(blob);
     var link = document.createElement("a");
-    link.download = "config.json";
-    link.href = url;
-    link.click();
+    link.download = "config.json"; link.href = url; link.click();
     URL.revokeObjectURL(url);
     downloadCfgBtn.classList.add("saved");
     downloadCfgBtn.textContent = "✓ Descargado — ahora súbelo a GitHub";
     statusEl.textContent = "Reemplaza el archivo config.json de tu repositorio con este que acabas de descargar.";
-    setTimeout(function(){
-      downloadCfgBtn.classList.remove("saved");
-      downloadCfgBtn.textContent = "⬇️ Descargar config.json actualizado";
-    }, 3200);
+    setTimeout(function(){ downloadCfgBtn.classList.remove("saved"); downloadCfgBtn.textContent="⬇️ Descargar config.json actualizado"; }, 3200);
   });
 })();
 </script>

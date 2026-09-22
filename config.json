@@ -1,19 +1,37 @@
 {
   "rate": 90,
+  "whatsapp": "527717948519",
+  "paymentMethod": "Transferencia bancaria",
   "tiers": [
-    {
-      "min": 60,
-      "pct": 15
-    },
-    {
-      "min": 40,
-      "pct": 10
-    },
-    {
-      "min": 20,
-      "pct": 5
-    }
+    { "min": 60, "pct": 15 },
+    { "min": 40, "pct": 10 },
+    { "min": 20, "pct": 5 }
   ],
+  "intro": [
+    "Cada servicio vale ciertos \"puntos\", y los puntos se convierten en pesos.",
+    "Agrega lo que necesites con los botones + — el precio se calcula solo.",
+    "Al final descargas tu cotización y nos la mandas por WhatsApp."
+  ],
+  "packages": {
+    "redes": [
+      { "id": "redes-basico", "nombre": "Básico", "resumen": "8 publicaciones + 2 historias + plan de contenido", "precio": 1170 },
+      { "id": "redes-medio", "nombre": "Medio", "resumen": "12 publicaciones + 4 historias + 4 videos (edición) + plan + redacción", "precio": 2650 },
+      { "id": "redes-deluxe", "nombre": "Deluxe", "resumen": "20 publicaciones + 8 historias + 8 videos (edición) + plan + redacción", "precio": 4100 }
+    ],
+    "web": [
+      { "id": "web-basico", "nombre": "Básico", "resumen": "Landing sencilla (una sección)", "precio": 540 },
+      { "id": "web-medio", "nombre": "Medio", "resumen": "Página web completa (varias secciones)", "precio": 900 },
+      { "id": "web-deluxe", "nombre": "Deluxe", "resumen": "Web completa + 3 pantallas extra + ajustes continuos", "precio": 1700 }
+    ],
+    "marca": [
+      { "id": "marca-basico", "nombre": "Básico", "resumen": "Logo", "precio": 450 },
+      { "id": "marca-medio", "nombre": "Medio", "resumen": "Logo + colores + tipografía", "precio": 720 },
+      { "id": "marca-deluxe", "nombre": "Deluxe", "resumen": "Manual de marca completo + concepto de marca", "precio": 1620 }
+    ],
+    "completo": [
+      { "id": "todo-incluido", "nombre": "Todo Incluido", "resumen": "Identidad completa + Web deluxe (arranque único) + Redes deluxe (mensual)", "precioUnico": 3250, "precioMensual": 4100, "bonos": ["Auditoría de redes de regalo (valor $540)", "Entregas urgentes sin recargo"] }
+    ]
+  },
   "categories": [
     {
       "id": "redes",
@@ -21,56 +39,32 @@
       "name": "Redes y contenido",
       "sub": "Publicaciones, videos, planeación y textos para tus redes",
       "monthly": true,
-      "items": [
-        {
-          "id": "post",
-          "name": "Publicación (foto o imagen)",
-          "pts": 1
+      "entrega": "El contenido se entrega en tandas según un calendario acordado contigo · piezas sueltas en 2-3 días hábiles · videos en 3-4 días hábiles cada uno",
+      "toggles": {
+        "fotos": {
+          "label": "¿Quién toma las fotos para tus publicaciones, historias y carruseles?",
+          "required": true,
+          "options": [
+            { "id": "cliente", "label": "Yo mando mis fotos" },
+            { "id": "angie", "label": "Angie las toma" }
+          ]
         },
-        {
-          "id": "historia",
-          "name": "Historia",
-          "pts": 1
-        },
-        {
-          "id": "carrusel",
-          "name": "Carrusel (varias imágenes)",
-          "pts": 2
-        },
-        {
-          "id": "video",
-          "name": "Video o reel",
-          "pts": 2
-        },
-        {
-          "id": "copy",
-          "name": "Redacción de textos — todo el mes",
-          "pts": 4
-        },
-        {
-          "id": "plan",
-          "name": "Plan de contenido del mes",
-          "pts": 3
+        "video": {
+          "label": "Tus videos, ¿cómo los prefieres?",
+          "required": true,
+          "options": [
+            { "id": "edicion", "label": "Yo grabo, Angie edita" },
+            { "id": "grabacion", "label": "Angie graba y edita todo" }
+          ]
         }
-      ]
-    },
-    {
-      "id": "produccion",
-      "icon": "🎥",
-      "name": "¿Necesitas que yo tome las fotos o grabe?",
-      "sub": "Solo si el cliente no manda material propio — se agrega una vez y ya cubre el contenido del mes",
-      "monthly": true,
+      },
       "items": [
-        {
-          "id": "sesion-media",
-          "name": "Sesión de producción — medio día",
-          "pts": 5
-        },
-        {
-          "id": "sesion-completa",
-          "name": "Sesión de producción — día completo",
-          "pts": 9
-        }
+        { "id": "post", "name": "Publicación (foto o imagen)", "toggle": "fotos", "pts": { "cliente": 1, "angie": 2 } },
+        { "id": "historia", "name": "Historia", "toggle": "fotos", "pts": { "cliente": 1, "angie": 2 } },
+        { "id": "carrusel", "name": "Carrusel (varias imágenes)", "toggle": "fotos", "pts": { "cliente": 2, "angie": 4 } },
+        { "id": "video", "name": "Video o reel", "toggle": "video", "pts": { "edicion": 2, "grabacion": 5 } },
+        { "id": "copy", "name": "Redacción de textos — todo el mes", "pts": 4 },
+        { "id": "plan", "name": "Plan de contenido del mes", "pts": 3 }
       ]
     },
     {
@@ -79,27 +73,12 @@
       "name": "Páginas web y apps",
       "sub": "Diseño de pantallas, landing pages y sitios completos",
       "monthly": true,
+      "entrega": "Landing: 5-7 días hábiles · Web completa: 15-20 días hábiles",
       "items": [
-        {
-          "id": "pantalla",
-          "name": "Pantalla de app o web",
-          "pts": 2
-        },
-        {
-          "id": "landing",
-          "name": "Página web sencilla (una sección)",
-          "pts": 6
-        },
-        {
-          "id": "web-completa",
-          "name": "Página web completa (varias secciones)",
-          "pts": 10
-        },
-        {
-          "id": "ajustes",
-          "name": "Ajustes a algo que ya existe",
-          "pts": 4
-        }
+        { "id": "pantalla", "name": "Pantalla de app o web", "pts": 2 },
+        { "id": "landing", "name": "Página web sencilla (una sección)", "pts": 6 },
+        { "id": "web-completa", "name": "Página web completa (varias secciones)", "pts": 10 },
+        { "id": "ajustes", "name": "Ajustes a algo que ya existe", "pts": 4 }
       ]
     },
     {
@@ -108,27 +87,24 @@
       "name": "Marca e identidad",
       "sub": "Logo, identidad visual y estrategia de marca",
       "monthly": true,
+      "entrega": "Logo: 5-7 días hábiles · Paquete básico: 7-10 días hábiles · Manual completo: 10-15 días hábiles",
       "items": [
-        {
-          "id": "logo",
-          "name": "Logo",
-          "pts": 5
-        },
-        {
-          "id": "paquete",
-          "name": "Paquete básico (logo + colores + tipografía)",
-          "pts": 8
-        },
-        {
-          "id": "manual",
-          "name": "Manual de marca completo",
-          "pts": 12
-        },
-        {
-          "id": "concepto",
-          "name": "Concepto de marca (nombre, personalidad, público)",
-          "pts": 6
-        }
+        { "id": "logo", "name": "Logo", "pts": 5 },
+        { "id": "paquete", "name": "Paquete básico (logo + colores + tipografía)", "pts": 8 },
+        { "id": "manual", "name": "Manual de marca completo", "pts": 12 },
+        { "id": "concepto", "name": "Concepto de marca (nombre, personalidad, público)", "pts": 6 }
+      ]
+    },
+    {
+      "id": "estrategia",
+      "icon": "🔎",
+      "name": "Análisis y estrategia",
+      "sub": "Evaluar cómo vas y qué mejorar — esto es trabajo de estratega, no solo de diseño",
+      "monthly": true,
+      "entrega": "5-7 días hábiles",
+      "items": [
+        { "id": "auditoria", "name": "Auditoría y diagnóstico de redes (análisis + recomendaciones por escrito)", "pts": 6 },
+        { "id": "reporte", "name": "Reporte mensual de resultados", "pts": 2 }
       ]
     },
     {
@@ -138,33 +114,25 @@
       "sub": "Encargos sueltos, sin plan mensual — se paga directo en pesos",
       "monthly": false,
       "currency": true,
+      "entrega": "24-48 horas",
       "items": [
-        {
-          "id": "flyer",
-          "name": "Flyer",
-          "price": 150
-        },
-        {
-          "id": "banner",
-          "name": "Banner",
-          "price": 150
-        },
-        {
-          "id": "tarjeta",
-          "name": "Tarjeta de presentación",
-          "price": 150
-        },
-        {
-          "id": "portada",
-          "name": "Portada para redes",
-          "price": 150
-        },
-        {
-          "id": "lona",
-          "name": "Lona",
-          "price": 250
-        }
+        { "id": "flyer", "name": "Flyer", "price": 150 },
+        { "id": "banner", "name": "Banner", "price": 150 },
+        { "id": "tarjeta", "name": "Tarjeta de presentación", "price": 150 },
+        { "id": "portada", "name": "Portada para redes", "price": 150 },
+        { "id": "lona", "name": "Lona", "price": 250 }
       ]
     }
+  ],
+  "terminos": [
+    "Cada punto incluye 1 ronda de cambios; ajustes adicionales tienen costo aparte.",
+    "Entregas urgentes (menos de 48 horas) tienen 20% de recargo.",
+    "Los planes mensuales piden aviso de cancelación con al menos 15 días de anticipación.",
+    "Esta cotización es un estimado, válido por 15 días — no es un cobro ni un contrato.",
+    "Pago: 50% de anticipo, 50% contra entrega, por transferencia bancaria.",
+    "El anticipo de proyectos de pago único no es reembolsable una vez iniciado el proyecto, ya que cubre el tiempo ya invertido.",
+    "Si no me mandas tu contenido o información a tiempo, la fecha de entrega se recorre — no es responsabilidad mía.",
+    "Los planes de redes incluyen hasta 2 llamadas o juntas al mes; juntas extra se agendan aparte.",
+    "Angie puede mostrar el trabajo terminado en su portafolio y redes, dando crédito a tu marca."
   ]
 }
