@@ -46,9 +46,10 @@
       "id": "redes",
       "icon": "📱",
       "name": "Redes y contenido",
-      "sub": "Publicaciones, videos, planeación y textos para tus redes",
+      "sub": "Publicaciones, videos, planeación, textos y análisis para tus redes",
       "monthly": true,
-      "entrega": "El contenido se entrega en tandas según un calendario acordado contigo · piezas sueltas en 2-3 días hábiles · videos en 3-4 días hábiles cada uno",
+      "bucket": "mensual",
+      "entrega": "El contenido se entrega en tandas según un calendario acordado contigo · piezas sueltas en 2-3 días hábiles · videos en 3-4 días hábiles cada uno · auditoría en 5-7 días hábiles",
       "toggles": {
         "fotos": {
           "label": "¿Quién toma las fotos para tus publicaciones, historias y carruseles?",
@@ -73,15 +74,18 @@
         { "id": "carrusel", "name": "Carrusel (varias imágenes)", "toggle": "fotos", "pts": { "cliente": 2, "angie": 4 } },
         { "id": "video", "name": "Video o reel", "toggle": "video", "pts": { "edicion": 2, "grabacion": 5 } },
         { "id": "copy", "name": "Redacción de textos — todo el mes", "pts": 4 },
-        { "id": "plan", "name": "Plan de contenido del mes", "pts": 3 }
+        { "id": "plan", "name": "Plan de contenido del mes", "pts": 3 },
+        { "id": "auditoria", "name": "Auditoría y diagnóstico de redes (análisis + recomendaciones por escrito)", "pts": 6 },
+        { "id": "reporte", "name": "Reporte mensual de resultados", "pts": 2, "checkbox": true, "recommended": true }
       ]
     },
     {
       "id": "web",
       "icon": "💻",
       "name": "Páginas web y apps",
-      "sub": "Diseño de pantallas, landing pages y sitios completos",
-      "monthly": true,
+      "sub": "Diseño de pantallas, landing pages y sitios completos — pago único",
+      "monthly": false,
+      "bucket": "unico",
       "entrega": "Landing: 5-7 días hábiles · Web completa: 15-20 días hábiles",
       "items": [
         { "id": "pantalla", "name": "Pantalla de app o web", "pts": 2 },
@@ -94,26 +98,15 @@
       "id": "marca",
       "icon": "🎨",
       "name": "Marca e identidad",
-      "sub": "Logo, identidad visual y estrategia de marca",
-      "monthly": true,
+      "sub": "Logo, identidad visual y estrategia de marca — pago único",
+      "monthly": false,
+      "bucket": "unico",
       "entrega": "Logo: 5-7 días hábiles · Paquete básico: 7-10 días hábiles · Manual completo: 10-15 días hábiles",
       "items": [
         { "id": "logo", "name": "Logo", "pts": 5 },
         { "id": "paquete", "name": "Paquete básico (logo + colores + tipografía)", "pts": 8 },
         { "id": "manual", "name": "Manual de marca completo", "pts": 12 },
         { "id": "concepto", "name": "Concepto de marca (nombre, personalidad, público)", "pts": 6 }
-      ]
-    },
-    {
-      "id": "estrategia",
-      "icon": "🔎",
-      "name": "Análisis y estrategia",
-      "sub": "Evaluar cómo vas y qué mejorar — esto es trabajo de estratega, no solo de diseño",
-      "monthly": true,
-      "entrega": "5-7 días hábiles",
-      "items": [
-        { "id": "auditoria", "name": "Auditoría y diagnóstico de redes (análisis + recomendaciones por escrito)", "pts": 6 },
-        { "id": "reporte", "name": "Reporte mensual de resultados", "pts": 2 }
       ]
     },
     {

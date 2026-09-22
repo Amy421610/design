@@ -110,6 +110,10 @@
   .qty input:focus{outline:none;}
   .qty button:disabled{opacity:.3;cursor:not-allowed;}
 
+  .item-checkbox{display:flex;align-items:center;gap:8px;flex:none;background:var(--surface-2);border-radius:20px;padding:8px 14px;cursor:pointer;}
+  .item-checkbox input{width:16px;height:16px;flex:none;}
+  .recommended-badge{background:var(--good-soft);color:var(--good);font-size:10.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:3px 8px;border-radius:10px;margin-left:8px;}
+
   .custom-box{margin:12px 18px 18px;padding:14px;border:1px dashed var(--line);border-radius:12px;background:var(--surface-2);}
   .custom-box label{display:block;font-weight:700;font-size:13.5px;margin-bottom:8px;}
   .custom-box textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:'Manrope';font-size:13.5px;resize:vertical;min-height:60px;}
@@ -117,14 +121,20 @@
 
   /* Cart */
   .cart{position:sticky;top:16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);}
-  .cart h2{font-size:18px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .cart-head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .cart-head-row h2{margin-bottom:0;}
+  .clear-btn{background:none;border:none;color:var(--ink-soft);font-size:11.5px;font-weight:700;cursor:pointer;text-decoration:underline;padding:0;}
+  .clear-btn:hover{color:var(--accent);}
   .cart-empty{color:var(--ink-soft);font-size:13.5px;padding:10px 0;}
   .cart-section{margin-bottom:14px;}
   .cart-section-title{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;}
-  .cart-line{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:5px 0;}
+  .cart-line{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13.5px;padding:5px 0;}
   .cart-line .l-name{color:var(--ink);font-weight:600;}
   .cart-line .l-qty{color:var(--ink-soft);font-weight:500;}
+  .cart-line .l-right{display:flex;align-items:center;gap:8px;flex:none;}
   .cart-line .l-val{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap;}
+  .l-remove{border:none;background:var(--surface-2);color:var(--ink-soft);width:20px;height:20px;border-radius:50%;font-size:12px;line-height:1;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;}
+  .l-remove:hover{background:var(--accent);color:#fff;}
   .divider{height:1px;background:var(--line);margin:14px 0;}
   .tier-badge{display:inline-flex;align-items:center;gap:6px;background:var(--good-soft);color:var(--good);font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:20px;margin-bottom:12px;}
   .totals-row{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;color:var(--ink-soft);padding:3px 0;}
@@ -217,7 +227,10 @@
     </div>
 
     <div class="cart" id="cartAnchor">
-      <h2>🛒 Tu cotización</h2>
+      <div class="cart-head-row">
+        <h2>🛒 Tu cotización</h2>
+        <button class="clear-btn" id="clearAllBtn" type="button">Borrar todo</button>
+      </div>
       <div id="cartBody"><div class="cart-empty">Aún no has agregado nada.</div></div>
       <button class="btn btn-primary" id="downloadBtn" type="button" style="display:none">🖼️ Descargar cotización (imagen)</button>
       <button class="btn btn-ghost" id="copyBtn" type="button" style="display:none">📋 Copiar como texto</button>
@@ -511,17 +524,31 @@
         nameEl.textContent = item.name;
         row.appendChild(nameEl);
 
+        if(item.recommended){
+          var badge = document.createElement("span");
+          badge.className = "recommended-badge";
+          badge.textContent = "Recomendado";
+          nameEl.appendChild(badge);
+        }
+
         var priceEl = document.createElement("div");
         priceEl.className = "item-price";
         priceEl.textContent = cat.currency ? fmt.format(item.price) : itemUnitLabel(cat,item);
         row.appendChild(priceEl);
 
-        var qtyEl = document.createElement("div");
-        qtyEl.className = "qty";
-        qtyEl.innerHTML = '<button class="minus" data-id="'+item.id+'" type="button" '+(locked?"disabled":"")+'>−</button>'+
-          '<input type="number" min="0" class="qn" data-id="'+item.id+'" value="'+(state.qty[item.id]||0)+'" '+(locked?"disabled":"")+'>'+
-          '<button class="plus" data-id="'+item.id+'" type="button" '+(locked?"disabled":"")+'>+</button>';
-        row.appendChild(qtyEl);
+        if(item.checkbox){
+          var checkWrap = document.createElement("label");
+          checkWrap.className = "item-checkbox";
+          checkWrap.innerHTML = '<input type="checkbox" class="item-check" data-id="'+item.id+'" '+((state.qty[item.id]||0)>0?"checked":"")+'>';
+          row.appendChild(checkWrap);
+        } else {
+          var qtyEl = document.createElement("div");
+          qtyEl.className = "qty";
+          qtyEl.innerHTML = '<button class="minus" data-id="'+item.id+'" type="button" '+(locked?"disabled":"")+'>−</button>'+
+            '<input type="number" min="0" class="qn" data-id="'+item.id+'" value="'+(state.qty[item.id]||0)+'" '+(locked?"disabled":"")+'>'+
+            '<button class="plus" data-id="'+item.id+'" type="button" '+(locked?"disabled":"")+'>+</button>';
+          row.appendChild(qtyEl);
+        }
         inner.appendChild(row);
       });
 
@@ -573,6 +600,13 @@
         renderCart();
       });
     });
+    catsEl.querySelectorAll(".item-check").forEach(function(chk){
+      chk.addEventListener("change", function(){
+        var id = chk.getAttribute("data-id");
+        state.qty[id] = chk.checked ? 1 : 0;
+        renderCart();
+      });
+    });
     var customTextarea = document.getElementById("customText");
     var addCustomBtn = document.getElementById("addCustomBtn");
     if(customTextarea){
@@ -596,7 +630,7 @@
   /* ---------- TOTALS ---------- */
   function computeTotals(){
     var rate = state.config.rate;
-    var monthlyLines = [], quickLines = [], totalPoints = 0, quickTotal = 0;
+    var monthlyLines = [], projectLines = [], quickLines = [], monthlyPoints = 0, projectPoints = 0, quickTotal = 0;
 
     state.config.categories.forEach(function(cat){
       cat.items.forEach(function(item){
@@ -605,21 +639,31 @@
         if(cat.currency){
           var sub = item.price*q;
           quickTotal += sub;
-          quickLines.push({name:item.name, qty:q, val:sub});
+          quickLines.push({id:item.id, name:item.name, qty:q, val:sub});
         } else {
           var pts = itemPts(cat,item);
           if(pts===null) return;
           var totalPts = pts*q;
-          totalPoints += totalPts;
-          monthlyLines.push({name:item.name, qty:q, pts:totalPts});
+          if(cat.bucket === "unico"){
+            projectPoints += totalPts;
+            projectLines.push({id:item.id, name:item.name, qty:q, pts:totalPts});
+          } else {
+            monthlyPoints += totalPts;
+            monthlyLines.push({id:item.id, name:item.name, qty:q, pts:totalPts});
+          }
         }
       });
     });
 
-    var tier = tierFor(totalPoints);
-    var rawTotal = totalPoints*rate;
+    var tier = tierFor(monthlyPoints);
+    var rawTotal = monthlyPoints*rate;
     var pct = tier?tier.pct:0;
     var finalItemized = rawTotal*(1-pct/100);
+
+    var projectTier = tierFor(projectPoints);
+    var projectRaw = projectPoints*rate;
+    var projectPct = projectTier?projectTier.pct:0;
+    var projectPrice = projectRaw*(1-projectPct/100);
 
     var pkgMonthlyLines = [], pkgOneTimeLines = [];
     var pk = state.config.packages||{};
@@ -628,8 +672,8 @@
         if(!state.packagesSelected[pack.id]) return;
         var full = !!state.packageMode[pack.id];
         var b = computeBundle(pack.items, full);
-        if(group==="redes") pkgMonthlyLines.push({name:"Paquete "+pack.nombre+" (redes)"+(full?" — Angie hace todo":""), val:b.price});
-        else pkgOneTimeLines.push({name:"Paquete "+pack.nombre+" ("+(group==="web"?"web":"marca")+")", val:b.price});
+        if(group==="redes") pkgMonthlyLines.push({pkg:pack.id, name:"Paquete "+pack.nombre+" (redes)"+(full?" — Angie hace todo":""), val:b.price});
+        else pkgOneTimeLines.push({pkg:pack.id, name:"Paquete "+pack.nombre+" ("+(group==="web"?"web":"marca")+")", val:b.price});
       });
     });
     (pk.completo||[]).forEach(function(pack){
@@ -638,25 +682,31 @@
       if(full===undefined) full = !!pack.prodDefault;
       var arranqueB = computeBundle(pack.arranque, full);
       var mensualB = computeBundle(pack.mensual, full);
-      pkgOneTimeLines.push({name:pack.nombre+" — arranque", val:arranqueB.price});
-      pkgMonthlyLines.push({name:pack.nombre+" — mensual"+(full?" — Angie hace todo":""), val:mensualB.price});
+      pkgOneTimeLines.push({pkg:pack.id, name:pack.nombre+" — arranque", val:arranqueB.price});
+      pkgMonthlyLines.push({pkg:pack.id, name:pack.nombre+" — mensual"+(full?" — Angie hace todo":""), val:mensualB.price});
     });
 
     var pkgMonthlyTotal = pkgMonthlyLines.reduce(function(s,l){return s+l.val;},0);
     var pkgOneTimeTotal = pkgOneTimeLines.reduce(function(s,l){return s+l.val;},0);
 
     var grandMonthly = finalItemized + pkgMonthlyTotal;
-    var grandOneTime = quickTotal + pkgOneTimeTotal;
+    var grandOneTime = projectPrice + quickTotal + pkgOneTimeTotal;
 
-    return {monthlyLines:monthlyLines, quickLines:quickLines, totalPoints:totalPoints, quickTotal:quickTotal,
+    return {monthlyLines:monthlyLines, projectLines:projectLines, quickLines:quickLines,
+      monthlyPoints:monthlyPoints, projectPoints:projectPoints, quickTotal:quickTotal,
       tier:tier, rawTotal:rawTotal, pct:pct, finalItemized:finalItemized,
+      projectTier:projectTier, projectRaw:projectRaw, projectPct:projectPct, projectPrice:projectPrice,
       pkgMonthlyLines:pkgMonthlyLines, pkgOneTimeLines:pkgOneTimeLines, pkgMonthlyTotal:pkgMonthlyTotal, pkgOneTimeTotal:pkgOneTimeTotal,
       grandMonthly:grandMonthly, grandOneTime:grandOneTime, customAdded:state.customAdded};
   }
 
+  function lineRemoveBtn(cls, dataAttr){
+    return '<button class="l-remove '+cls+'" type="button" '+(dataAttr||"")+' title="Quitar">✕</button>';
+  }
+
   function renderCart(){
     var t = computeTotals();
-    var hasAnything = t.monthlyLines.length||t.quickLines.length||t.pkgMonthlyLines.length||t.pkgOneTimeLines.length||t.customAdded;
+    var hasAnything = t.monthlyLines.length||t.projectLines.length||t.quickLines.length||t.pkgMonthlyLines.length||t.pkgOneTimeLines.length||t.customAdded;
 
     if(!hasAnything){
       cartBodyEl.innerHTML = '<div class="cart-empty">Aún no has agregado nada.</div>';
@@ -670,32 +720,38 @@
     if(t.pkgMonthlyLines.length || t.monthlyLines.length){
       html += '<div class="cart-section"><div class="cart-section-title">Plan mensual</div>';
       t.pkgMonthlyLines.forEach(function(l){
-        html += '<div class="cart-line"><span class="l-name">'+l.name+'</span><span class="l-val">'+fmt.format(l.val)+'</span></div>';
+        html += '<div class="cart-line"><span class="l-name">'+l.name+'</span><span class="l-right"><span class="l-val">'+fmt.format(l.val)+'</span>'+lineRemoveBtn('rm-pkg','data-pkg="'+l.pkg+'"')+'</span></div>';
       });
       t.monthlyLines.forEach(function(l){
-        html += '<div class="cart-line"><span class="l-name">'+l.name+' <span class="l-qty">×'+l.qty+'</span></span><span class="l-val">'+l.pts+' pt'+(l.pts===1?"":"s")+'</span></div>';
+        html += '<div class="cart-line"><span class="l-name">'+l.name+' <span class="l-qty">×'+l.qty+'</span></span><span class="l-right"><span class="l-val">'+l.pts+' pt'+(l.pts===1?"":"s")+'</span>'+lineRemoveBtn('rm-item','data-id="'+l.id+'"')+'</span></div>';
       });
       html += '</div>';
       if(t.monthlyLines.length){
         html += '<div class="divider"></div>';
         if(t.tier) html += '<div class="tier-badge">🎉 Descuento por volumen: -'+t.pct+'%</div>';
-        html += '<div class="totals-row"><span>Puntos totales</span><span class="val">'+t.totalPoints+' pts</span></div>';
+        html += '<div class="totals-row"><span>Puntos totales</span><span class="val">'+t.monthlyPoints+' pts</span></div>';
         if(t.tier) html += '<div class="totals-row strike"><span>Precio sin descuento</span><span class="val">'+fmt.format(t.rawTotal)+'</span></div>';
       }
       html += '<div class="grand"><span>'+fmt.format(t.grandMonthly)+'<small>al mes</small></span></div>';
     }
 
-    if(t.pkgOneTimeLines.length || t.quickLines.length || t.customAdded){
+    if(t.pkgOneTimeLines.length || t.projectLines.length || t.quickLines.length || t.customAdded){
       if(t.pkgMonthlyLines.length||t.monthlyLines.length) html += '<div class="divider"></div>';
       html += '<div class="cart-section"><div class="cart-section-title">Pagos únicos</div>';
       t.pkgOneTimeLines.forEach(function(l){
-        html += '<div class="cart-line"><span class="l-name">'+l.name+'</span><span class="l-val">'+fmt.format(l.val)+'</span></div>';
+        html += '<div class="cart-line"><span class="l-name">'+l.name+'</span><span class="l-right"><span class="l-val">'+fmt.format(l.val)+'</span>'+lineRemoveBtn('rm-pkg','data-pkg="'+l.pkg+'"')+'</span></div>';
       });
+      t.projectLines.forEach(function(l){
+        html += '<div class="cart-line"><span class="l-name">'+l.name+' <span class="l-qty">×'+l.qty+'</span></span><span class="l-right"><span class="l-val">'+l.pts+' pt'+(l.pts===1?"":"s")+'</span>'+lineRemoveBtn('rm-item','data-id="'+l.id+'"')+'</span></div>';
+      });
+      if(t.projectLines.length && t.projectTier){
+        html += '<div class="tier-badge" style="margin-top:4px;">🎉 Descuento por volumen: -'+t.projectPct+'%</div>';
+      }
       t.quickLines.forEach(function(l){
-        html += '<div class="cart-line"><span class="l-name">'+l.name+' <span class="l-qty">×'+l.qty+'</span></span><span class="l-val">'+fmt.format(l.val)+'</span></div>';
+        html += '<div class="cart-line"><span class="l-name">'+l.name+' <span class="l-qty">×'+l.qty+'</span></span><span class="l-right"><span class="l-val">'+fmt.format(l.val)+'</span>'+lineRemoveBtn('rm-item','data-id="'+l.id+'"')+'</span></div>';
       });
       if(t.customAdded){
-        html += '<div class="custom-line">✏️ Diseño personalizado: "'+t.customAdded+'" — por cotizar</div>';
+        html += '<div class="cart-line"><span class="custom-line" style="padding:0;">✏️ Diseño personalizado: "'+t.customAdded+'" — por cotizar</span><span class="l-right">'+lineRemoveBtn('rm-custom')+'</span></div>';
       }
       html += '<div class="quick-total"><span>Total</span><span>'+fmt.format(t.grandOneTime)+'</span></div></div>';
     }
@@ -706,12 +762,48 @@
     copyBtn.style.display="flex"; downloadBtn.style.display="flex";
     waBtn.style.display = "none";
 
+    cartBodyEl.querySelectorAll(".rm-item").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.qty[btn.getAttribute("data-id")] = 0;
+        renderCategories();
+        renderCart();
+      });
+    });
+    cartBodyEl.querySelectorAll(".rm-pkg").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.packagesSelected[btn.getAttribute("data-pkg")] = false;
+        renderPackages();
+        renderCart();
+      });
+    });
+    cartBodyEl.querySelectorAll(".rm-custom").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.customAdded = null;
+        state.customText = "";
+        renderCategories();
+        renderCart();
+      });
+    });
+
     bottomBar.classList.add("visible");
     var bbParts = [];
     if(t.grandMonthly>0) bbParts.push(fmt.format(t.grandMonthly)+"/mes");
     if(t.grandOneTime>0) bbParts.push(fmt.format(t.grandOneTime)+" único");
     bbTotalText.textContent = bbParts.join(" + ") || "$0";
   }
+
+  document.getElementById("clearAllBtn").addEventListener("click", function(){
+    if(!confirm("¿Borrar toda tu cotización y empezar de nuevo?")) return;
+    Object.keys(state.qty).forEach(function(id){ state.qty[id] = 0; });
+    state.toggles = {};
+    state.packagesSelected = {};
+    state.packageMode = {};
+    state.customText = "";
+    state.customAdded = null;
+    renderPackages();
+    renderCategories();
+    renderCart();
+  });
 
   bbBtn.addEventListener("click", function(){
     document.getElementById("cartAnchor").scrollIntoView({behavior:"smooth", block:"start"});
@@ -727,10 +819,11 @@
       if(t.tier) html += '<div class="ex-tier">Descuento por volumen −'+t.pct+'%</div>';
       html += '<div class="ex-grand"><span>Total al mes</span><span>'+fmt.format(t.grandMonthly)+'</span></div>';
     }
-    if(t.pkgOneTimeLines.length||t.quickLines.length||t.customAdded){
+    if(t.pkgOneTimeLines.length||t.projectLines.length||t.quickLines.length||t.customAdded){
       if(t.pkgMonthlyLines.length||t.monthlyLines.length) html += '<div class="ex-divider"></div>';
       html += '<div class="ex-section-title">Pagos únicos</div>';
       t.pkgOneTimeLines.forEach(function(l){ html += '<div class="ex-line"><span>'+l.name+'</span><span>'+fmt.format(l.val)+'</span></div>'; });
+      t.projectLines.forEach(function(l){ html += '<div class="ex-line"><span>'+l.name+' ×'+l.qty+'</span><span>'+l.pts+' pt'+(l.pts===1?"":"s")+'</span></div>'; });
       t.quickLines.forEach(function(l){ html += '<div class="ex-line"><span>'+l.name+' ×'+l.qty+'</span><span>'+fmt.format(l.val)+'</span></div>'; });
       if(t.customAdded) html += '<div class="ex-line" style="font-style:italic;"><span>Personalizado: '+t.customAdded+'</span><span>Por cotizar</span></div>';
       html += '<div class="ex-line" style="font-weight:800;margin-top:4px;"><span>Total único</span><span>'+fmt.format(t.grandOneTime)+'</span></div>';
@@ -748,9 +841,10 @@
       if(t.tier) text += "Descuento por volumen: -"+t.pct+"%\n";
       text += "Total al mes: "+fmt.format(t.grandMonthly)+"\n";
     }
-    if(t.pkgOneTimeLines.length||t.quickLines.length||t.customAdded){
+    if(t.pkgOneTimeLines.length||t.projectLines.length||t.quickLines.length||t.customAdded){
       text += "\nPagos únicos:\n";
       t.pkgOneTimeLines.forEach(function(l){ text += "• "+l.name+" — "+fmt.format(l.val)+"\n"; });
+      t.projectLines.forEach(function(l){ text += "• "+l.name+" ×"+l.qty+"\n"; });
       t.quickLines.forEach(function(l){ text += "• "+l.name+" ×"+l.qty+" — "+fmt.format(l.val)+"\n"; });
       if(t.customAdded) text += "• Personalizado: "+t.customAdded+" (por cotizar)\n";
       text += "Total único: "+fmt.format(t.grandOneTime)+"\n";
