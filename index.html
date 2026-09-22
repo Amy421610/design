@@ -102,6 +102,7 @@
   .item-row{display:flex;align-items:center;gap:12px;padding:12px 18px;border-top:1px solid var(--line);transition:opacity .15s;}
   .item-row.locked{opacity:.4;}
   .item-name{flex:1;min-width:0;font-weight:600;font-size:14.5px;}
+  .item-desc{font-weight:400;font-size:12px;color:var(--ink-soft);margin-top:3px;line-height:1.4;}
   .item-price{color:var(--ink-soft);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700;}
   .qty{display:flex;align-items:center;gap:6px;background:var(--surface-2);border-radius:20px;padding:4px;flex:none;}
   .qty button{width:26px;height:26px;border-radius:50%;border:none;background:var(--surface);color:var(--ink);font-size:16px;font-weight:700;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;}
@@ -529,6 +530,13 @@
           badge.className = "recommended-badge";
           badge.textContent = "Recomendado";
           nameEl.appendChild(badge);
+        }
+
+        if(item.desc){
+          var descEl = document.createElement("div");
+          descEl.className = "item-desc";
+          descEl.textContent = item.desc;
+          nameEl.appendChild(descEl);
         }
 
         var priceEl = document.createElement("div");

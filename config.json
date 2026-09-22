@@ -103,10 +103,10 @@
       "bucket": "unico",
       "entrega": "Logo: 5-7 días hábiles · Paquete básico: 7-10 días hábiles · Manual completo: 10-15 días hábiles",
       "items": [
-        { "id": "logo", "name": "Logo", "pts": 5 },
-        { "id": "paquete", "name": "Paquete básico (logo + colores + tipografía)", "pts": 8 },
-        { "id": "manual", "name": "Manual de marca completo", "pts": 12 },
-        { "id": "concepto", "name": "Concepto de marca (nombre, personalidad, público)", "pts": 6 }
+        { "id": "logo", "name": "Logo", "pts": 5, "desc": "Tu símbolo principal, ideal si solo necesitas una imagen para empezar." },
+        { "id": "paquete", "name": "Paquete básico (logo + colores + tipografía)", "pts": 8, "desc": "Para que tu marca se vea consistente en todos lados: redes, papelería, empaques." },
+        { "id": "manual", "name": "Manual de marca completo", "pts": 12, "desc": "El documento que le puedes dar a cualquier diseñador o imprenta para que tu marca se vea igual siempre, sin depender de ti explicando cada vez." },
+        { "id": "concepto", "name": "Concepto de marca (nombre, personalidad, público)", "pts": 6, "desc": "Antes del diseño: define quién eres, cómo hablas y a quién le hablas — la base de todo lo demás." }
       ]
     },
     {
